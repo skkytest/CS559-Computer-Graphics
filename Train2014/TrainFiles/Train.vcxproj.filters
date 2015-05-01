@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Utilities\3DUtils.cpp">
+      <Filter>work files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Utilities\ArcBallCam.cpp">
+      <Filter>work files</Filter>
+    </ClCompile>
+    <ClCompile Include="CallBacks.cpp">
+      <Filter>work files</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlPoint.cpp">
+      <Filter>work files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Utilities\Pnt3f.cpp">
+      <Filter>work files</Filter>
+    </ClCompile>
+    <ClCompile Include="Train.cpp">
+      <Filter>work files</Filter>
+    </ClCompile>
+    <ClCompile Include="TrainView.cpp">
+      <Filter>work files</Filter>
+    </ClCompile>
+    <ClCompile Include="TrainWindow.cpp">
+      <Filter>work files</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>work files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Utilities\3DUtils.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Utilities\ArcBallCam.H">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="CallBacks.H">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlPoint.H">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.H">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Utilities\Pnt3f.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="TrainView.H">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="TrainWindow.H">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="World.H">
+      <Filter>header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="header files">
+      <UniqueIdentifier>{89990b2b-2fc4-4e43-88c8-7e6b4d674fd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="work files">
+      <UniqueIdentifier>{1d303191-a032-4a0f-b78d-d3658a961282}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
