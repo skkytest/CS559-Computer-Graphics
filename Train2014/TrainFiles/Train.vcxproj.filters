@@ -28,6 +28,12 @@
     <ClCompile Include="World.cpp">
       <Filter>work files</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderTools.cpp">
+      <Filter>work files</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawObjects.cpp">
+      <Filter>work files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utilities\3DUtils.h">
@@ -55,6 +61,12 @@
       <Filter>header files</Filter>
     </ClInclude>
     <ClInclude Include="World.H">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderTools.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawObjects.h">
       <Filter>header files</Filter>
     </ClInclude>
   </ItemGroup>
