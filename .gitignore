@@ -1,0 +1,13 @@
+#Ignore files build by Visual Studio
+*.obj
+*.exe
+*.ilk
+*.log
+*.pdb
+*.tlog
+*.sdf
+*.suo
+*.vcxproj
+*.user
+*.filters
+
