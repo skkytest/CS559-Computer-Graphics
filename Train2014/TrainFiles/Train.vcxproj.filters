@@ -34,6 +34,12 @@
     <ClCompile Include="DrawObjects.cpp">
       <Filter>work files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Utilities\Texture.cpp">
+      <Filter>work files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Utilities\libtarga.c">
+      <Filter>work files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utilities\3DUtils.h">
@@ -69,6 +75,12 @@
     <ClInclude Include="DrawObjects.h">
       <Filter>header files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Utilities\Texture.H">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Utilities\libtarga.h">
+      <Filter>header files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="header files">
@@ -77,9 +89,5 @@
     <Filter Include="work files">
       <UniqueIdentifier>{1d303191-a032-4a0f-b78d-d3658a961282}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="default.frag.txt" />
-    <Text Include="default.vert.txt" />
   </ItemGroup>
 </Project>

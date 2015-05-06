@@ -62,6 +62,9 @@ public:
 	//my tank
 	void drawTank(TrainView*, bool doingShadows = false);
 
+	//my billboard
+	void drawBillboard(TrainView*, bool doingShadows = false);
+
 	// setup the projection - assuming that the projection stack has been
 	// cleared for you
 	void setProjection();

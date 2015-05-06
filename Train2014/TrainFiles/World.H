@@ -45,7 +45,7 @@ public:		// we don't make anything private - for no good reason
 	//use this parameter to set arc-length
 	float delta = 0.0;
 	//We use this parameter to decide the rotate angle of the train
-	float angle = 80.4139;
+	float angle = 45.0228;
 	float heightAngle = 0;
 	//Those are parameters that move the train to the correspond space
 	float xaxis=47.8786, yaxis=4, zaxis=2.12132;

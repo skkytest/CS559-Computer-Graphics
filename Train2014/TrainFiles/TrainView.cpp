@@ -21,7 +21,6 @@
 
 #include "ShaderTools.h"
 
-
 #ifdef EXAMPLE_SOLUTION
 #include "TrainExample/TrainExample.H"
 #endif
@@ -192,7 +191,7 @@ void TrainView::draw()
 		drawStuff(true);
 		unsetupShadows();
 	}
-
+	
 }
 
 // note: this sets up both the Projection and the ModelView matrices
@@ -262,7 +261,7 @@ void TrainView::drawStuff(bool doingShadows)
 	DrawObjects newDrawObjects;
 
 	glPushMatrix();
-	glTranslated(45,0,-45);
+	glTranslated(45, 0, -45);
 	if (!doingShadows){
 		static unsigned int shadedCubeShader = 0;
 		static bool triedCubeShader = false;
@@ -284,13 +283,10 @@ void TrainView::drawStuff(bool doingShadows)
 	}
 	glPopMatrix();
 
-	
 	//draw tree
 	newDrawObjects.drawTrees(this, doingShadows);
 	//draw track
 	newDrawObjects.drawTrack(this, doingShadows);
-	
-
 	//try surface of revolution
 	newDrawObjects.surfRevlution(this, doingShadows);
 
@@ -345,6 +341,9 @@ void TrainView::drawStuff(bool doingShadows)
 			glPopMatrix();
 		}
 	}
+
+	//draw billboard
+	newDrawObjects.drawBillboard(this, doingShadows);
 }
 
 // this tries to see which control point is under the mouse

@@ -343,12 +343,12 @@ void TrainWindow::advanceTrain(float dir)
 			float preY;
 			float py = this->world.distance;
 			if (p2y > p1y){
-				preY = ((-ts)*p0x + (2 - ts) * p1x + (ts - 2)*p2x + ts*p3x)*py*py*py + (2 * ts * p0x + (ts - 3) * p1x + (3 - 2 * ts) * p2x - ts*p3x)*py*py + ((-ts)*p0x + ts*p2x)*py + 2 * p1y;
-				phys = (0.5*length + p2y - preY) / (1.5*length)*2.5;
+				preY = ((-ts)*p0x + (2 - ts) * p1x + (ts - 2)*p2x + ts*p3x)*py*py*py + (2 * ts * p0x + (ts - 3) * p1x + (3 - 2 * ts) * p2x - ts*p3x)*py*py + ((-ts)*p0x + ts*p2x)*py + 2 * py;
+				phys = (0.01*length + p2y - preY) / (1.5*length)*2.5;
 			}
 			else if (p2y < p1y){
-				preY = ((-ts)*p0x + (2 - ts) * p1x + (ts - 2)*p2x + ts*p3x)*py*py*py + (2 * ts * p0x + (ts - 3) * p1x + (3 - 2 * ts) * p2x - ts*p3x)*py*py + ((-ts)*p0x + ts*p2x)*py + 2 * p1y;
-				phys = (p1y - preY + 0.5*length) / (1.5*length)*2.5;
+				preY = ((-ts)*p0x + (2 - ts) * p1x + (ts - 2)*p2x + ts*p3x)*py*py*py + (2 * ts * p0x + (ts - 3) * p1x + (3 - 2 * ts) * p2x - ts*p3x)*py*py + ((-ts)*p0x + ts*p2x)*py + 2 * py;
+				phys = (p1y - preY + 0.01*length) / (1.5*length)*2.5;
 			}
 			else{
 				phys = 2.5;
@@ -409,7 +409,7 @@ void TrainWindow::advanceTrain(float dir)
 
 			//r is used to calculate the rotate angle of the train
 			float r;
-			r= world.distance + 0.001;
+			r = world.distance + 0.001;
 
 			//calculate the matrix
 			float tx, ty, tz;

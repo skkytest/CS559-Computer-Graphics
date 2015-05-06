@@ -8,6 +8,7 @@
 #include "GL/glu.h"
 
 #include"DrawObjects.h"
+#include "../Utilities/Texture.H"
 
 //draw trees
 void DrawObjects::drawTrees(TrainView* thisTrainView, bool doingShadows){
@@ -109,8 +110,8 @@ void DrawObjects::drawTrack(TrainView* thisTrainView, bool doingShadows){
 			float nextX = thisTrainView->world->points[p].pos.x;
 			float nextY = thisTrainView->world->points[p].pos.y;
 			float nextZ = thisTrainView->world->points[p].pos.z;
-			if (!doingShadows) glColor3f(0.867f, 0.427f, 0.133f);
 			glBegin(GL_LINES);
+			if (!doingShadows) glColor3f(0.867, 0.427, 0.133);
 			glVertex3f(presentX, presentY, presentZ);
 			glVertex3f(nextX, nextY, nextZ);
 			glEnd();
@@ -142,19 +143,18 @@ void DrawObjects::drawTrack(TrainView* thisTrainView, bool doingShadows){
 
 
 			if (thisTrainView->world->trackType == 2){
-				if (!doingShadows) glColor3f(0.867f, 0.427f, 0.133f);
 				for (int times = 0; times / length < 0.98; times++){
 					glPushMatrix();
 					times = times + 5;
 					xbias = presentX + (nextX - presentX) * (times / length);
 					ybias = presentY + (nextY - presentY) * (times / length);
 					zbias = presentZ + (nextZ - presentZ) * (times / length);
-					//glRotatef(90+theAngle, 0, 1, 0);
 					glTranslatef(xbias, ybias - 4, zbias);
 					glRotatef(90 + theAngle, 0, 1, 0);
 					glRotatef(highAngle, 1, 0, 0);
 					glTranslatef(-5, 0, -1);
 					glBegin(GL_QUADS);
+					if (!doingShadows) glColor3f(0.867, 0.427, 0.133);
 					glVertex3f(0, 4, 0);
 					glVertex3f(10, 4, 0);
 					glVertex3f(10, 4, 2);
@@ -1388,6 +1388,30 @@ void DrawObjects::surfRevlution(TrainView* thisTrainView, bool doingShadows){
 	}
 	glPopMatrix();
 
+}
+
+void DrawObjects::drawBillboard(TrainView* thisTrainView, bool doingShadows) {
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glEnable(GL_TEXTURE_2D);
+	fetchTexture("opengl.jpg", false, false);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glBegin(GL_QUADS);
+	
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(0.0, 0.0, -80.0);
+	
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(64.0, 0.0, -80.0);
+	
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(64.0, 64.0, -80.0);
+
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(0.0, 64.0, -80.0);
+
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
 }
 
 void DrawObjects::cubes(){
