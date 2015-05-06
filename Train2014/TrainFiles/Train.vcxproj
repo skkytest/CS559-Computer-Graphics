@@ -119,6 +119,10 @@
     <ClInclude Include="..\Utilities\ArcBallCam.H" />
     <ClInclude Include="..\Utilities\Pnt3f.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="default.frag.txt" />
+    <Text Include="default.vert.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

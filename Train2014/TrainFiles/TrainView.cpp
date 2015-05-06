@@ -3,6 +3,7 @@
 // see the header for details
 // look for TODO: to see things you want to add/change
 // 
+#include <Gl/glew.h>
 #include <math.h>
 #include "TrainView.H"
 #include "TrainWindow.H"
@@ -11,11 +12,15 @@
 #include "Utilities/3DUtils.H"
 
 #include <Fl/fl.h>
+#include <FL/fl_ask.h>
 
 // we will need OpenGL, and OpenGL needs windows.h
 #include <windows.h>
 #include "GL/gl.h"
 #include "GL/glu.h"
+
+#include "ShaderTools.h"
+
 
 #ifdef EXAMPLE_SOLUTION
 #include "TrainExample/TrainExample.H"
@@ -187,7 +192,7 @@ void TrainView::draw()
 		drawStuff(true);
 		unsetupShadows();
 	}
-	
+
 }
 
 // note: this sets up both the Projection and the ModelView matrices
@@ -256,14 +261,38 @@ void TrainView::drawStuff(bool doingShadows)
 
 	DrawObjects newDrawObjects;
 
+	glPushMatrix();
+	glTranslated(45,0,-45);
+	if (!doingShadows){
+		static unsigned int shadedCubeShader = 0;
+		static bool triedCubeShader = false;
+		if (!shadedCubeShader && !triedCubeShader) {
+			triedCubeShader = true;
+			char* error;
+			if (!(shadedCubeShader = loadShader("ShadedCubeTest.vert", "ShadedCubeTest.frag", error))) {
+				std::string s = "Can't Load Cube Shader:";
+				s += error;
+				fl_alert(s.c_str());
+			}
+		}
+		glUseProgram(shadedCubeShader);
+		newDrawObjects.cubes();
+		glUseProgram(0);
+	}
+	else{
+		newDrawObjects.cubes();
+	}
+	glPopMatrix();
+
+	
 	//draw tree
 	newDrawObjects.drawTrees(this, doingShadows);
 	//draw track
 	newDrawObjects.drawTrack(this, doingShadows);
+	
 
 	//try surface of revolution
 	newDrawObjects.surfRevlution(this, doingShadows);
-
 
 	// draw the train
 	// TODO: call your own train drawing code

@@ -407,12 +407,9 @@ void TrainWindow::advanceTrain(float dir)
 
 		if (run){
 
-			t = this->world.distance;
-
 			//r is used to calculate the rotate angle of the train
 			float r;
-			//r= world.distance + 0.001;
-			r = t + 0.001;
+			r= world.distance + 0.001;
 
 			//calculate the matrix
 			float tx, ty, tz;

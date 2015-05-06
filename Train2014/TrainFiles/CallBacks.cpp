@@ -53,7 +53,7 @@ void changeContinuity(Fl_Widget*, TrainWindow* tw)
 	if (tw->splineBrowser->selected(2)){
 		tw->world.continuity = 2;
 		if (tw->runButton->value() == 0){
-			tw->world.angle = 69.4139;
+			tw->world.angle = 80.4139;
 			tw->world.xaxis = 47.8786;
 			tw->world.yaxis = 4;
 			tw->world.zaxis = 2.121;

@@ -78,4 +78,8 @@
       <UniqueIdentifier>{1d303191-a032-4a0f-b78d-d3658a961282}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="default.frag.txt" />
+    <Text Include="default.vert.txt" />
+  </ItemGroup>
 </Project>

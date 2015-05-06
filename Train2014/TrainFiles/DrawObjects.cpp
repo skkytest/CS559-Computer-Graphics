@@ -109,8 +109,8 @@ void DrawObjects::drawTrack(TrainView* thisTrainView, bool doingShadows){
 			float nextX = thisTrainView->world->points[p].pos.x;
 			float nextY = thisTrainView->world->points[p].pos.y;
 			float nextZ = thisTrainView->world->points[p].pos.z;
+			if (!doingShadows) glColor3f(0.867f, 0.427f, 0.133f);
 			glBegin(GL_LINES);
-			if (!doingShadows) glColor3f(0.867, 0.427, 0.133);
 			glVertex3f(presentX, presentY, presentZ);
 			glVertex3f(nextX, nextY, nextZ);
 			glEnd();
@@ -142,18 +142,19 @@ void DrawObjects::drawTrack(TrainView* thisTrainView, bool doingShadows){
 
 
 			if (thisTrainView->world->trackType == 2){
+				if (!doingShadows) glColor3f(0.867f, 0.427f, 0.133f);
 				for (int times = 0; times / length < 0.98; times++){
 					glPushMatrix();
 					times = times + 5;
 					xbias = presentX + (nextX - presentX) * (times / length);
 					ybias = presentY + (nextY - presentY) * (times / length);
 					zbias = presentZ + (nextZ - presentZ) * (times / length);
+					//glRotatef(90+theAngle, 0, 1, 0);
 					glTranslatef(xbias, ybias - 4, zbias);
 					glRotatef(90 + theAngle, 0, 1, 0);
 					glRotatef(highAngle, 1, 0, 0);
 					glTranslatef(-5, 0, -1);
 					glBegin(GL_QUADS);
-					if (!doingShadows) glColor3f(0.867, 0.427, 0.133);
 					glVertex3f(0, 4, 0);
 					glVertex3f(10, 4, 0);
 					glVertex3f(10, 4, 2);
@@ -1387,4 +1388,44 @@ void DrawObjects::surfRevlution(TrainView* thisTrainView, bool doingShadows){
 	}
 	glPopMatrix();
 
+}
+
+void DrawObjects::cubes(){
+
+	glBegin(GL_QUADS);
+	glVertex3f(0, 4, 0);
+	glVertex3f(0, 14, 0);
+	glVertex3f(0, 14, 10);
+	glVertex3f(0, 4, 10);
+
+	// back
+	glVertex3f(30, 4, 0);
+	glVertex3f(30, 14, 0);
+	glVertex3f(30, 14, 10);
+	glVertex3f(30, 4, 10);
+
+	// top
+	glVertex3f(0, 14, 0);
+	glVertex3f(30, 14, 0);
+	glVertex3f(30, 14, 10);
+	glVertex3f(0, 14, 10);
+
+	// bottom
+	glVertex3f(0, 4, 0);
+	glVertex3f(30, 4, 0);
+	glVertex3f(30, 4, 10);
+	glVertex3f(0, 4, 10);
+
+	// left
+	glVertex3f(0, 4, 0);
+	glVertex3f(0, 14, 0);
+	glVertex3f(30, 14, 0);
+	glVertex3f(30, 4, 0);
+
+	// right
+	glVertex3f(0, 4, 10);
+	glVertex3f(0, 14, 10);
+	glVertex3f(30, 14, 10);
+	glVertex3f(30, 4, 10);
+	glEnd();
 }

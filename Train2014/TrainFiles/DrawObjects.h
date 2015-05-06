@@ -12,5 +12,6 @@ public:
 	void drawTrain(TrainView*, bool);
 	void drawTank(TrainView*, bool);
 	void surfRevlution(TrainView*, bool);
+	void cubes();
 
 };
