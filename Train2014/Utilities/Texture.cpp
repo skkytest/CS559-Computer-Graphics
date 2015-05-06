@@ -35,13 +35,13 @@
 #pragma warning(disable : 4193)
 // List of all fltk include file for example #include <Fl/Fl_Window.h>
 #include <Fl/Fl.h>
-#include <Fl/Fl_Widget.h>
-#include <FL/Fl_Image.h>
-#include <FL/Fl_JPEG_Image.h>
-#include <FL/Fl_PNG_Image.h>
-#include <FL/Fl_BMP_Image.h>
-#include <FL/Fl_GIF_Image.h>
-#include <Fl/filename.h>
+#include <Fl/Fl_Widget.H>
+#include <Fl/Fl_Image.H>
+#include <Fl/Fl_JPEG_Image.H>
+#include <Fl/Fl_PNG_Image.H>
+#include <Fl/Fl_BMP_Image.H>
+#include <Fl/Fl_GIF_Image.H>
+#include <Fl/filename.H>
 #pragma warning (pop) // Enable the warning again
 
 using std::vector;

@@ -12,6 +12,7 @@
 #include "stdio.h"
 
 #include "TrainWindow.H"
+#include "Utilities/Texture.H"
 
 #pragma warning(push)
 #pragma warning(disable:4312)
@@ -22,6 +23,11 @@
 
 int main(int, char**)
 {
+	texturePaths.push_back(".");
+	texturePaths.push_back("./textures");
+	texturePaths.push_back("..");
+	texturePaths.push_back("../textures");
+
 	printf("CS559 Train Assignment\n");
 
 	TrainWindow tw;

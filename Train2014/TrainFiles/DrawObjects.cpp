@@ -8,6 +8,7 @@
 #include "GL/glu.h"
 
 #include"DrawObjects.h"
+#include "../Utilities/Texture.H"
 
 //draw trees
 void DrawObjects::drawTrees(TrainView* thisTrainView, bool doingShadows){
@@ -1387,4 +1388,28 @@ void DrawObjects::surfRevlution(TrainView* thisTrainView, bool doingShadows){
 	}
 	glPopMatrix();
 
+}
+
+void DrawObjects::drawBillboard(TrainView* thisTrainView, bool doingShadows) {
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glEnable(GL_TEXTURE_2D);
+	fetchTexture("opengl.jpg", false, false);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glBegin(GL_QUADS);
+	
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(0.0, 0.0, -80.0);
+	
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(64.0, 0.0, -80.0);
+	
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(64.0, 64.0, -80.0);
+
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(0.0, 64.0, -80.0);
+
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
 }

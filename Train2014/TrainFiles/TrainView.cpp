@@ -260,6 +260,8 @@ void TrainView::drawStuff(bool doingShadows)
 	newDrawObjects.drawTrees(this, doingShadows);
 	//draw track
 	newDrawObjects.drawTrack(this, doingShadows);
+	//draw billboard
+	newDrawObjects.drawBillboard(this, doingShadows);
 
 	//try surface of revolution
 	newDrawObjects.surfRevlution(this, doingShadows);
