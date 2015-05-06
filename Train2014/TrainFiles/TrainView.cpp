@@ -261,6 +261,9 @@ void TrainView::drawStuff(bool doingShadows)
 	//draw track
 	newDrawObjects.drawTrack(this, doingShadows);
 
+	//try surface of revolution
+	newDrawObjects.surfRevlution(this, doingShadows);
+
 
 	// draw the train
 	// TODO: call your own train drawing code

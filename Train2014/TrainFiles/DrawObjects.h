@@ -11,4 +11,6 @@ public:
 	void drawTrack(TrainView*, bool);
 	void drawTrain(TrainView*, bool);
 	void drawTank(TrainView*, bool);
+	void surfRevlution(TrainView*, bool);
+
 };

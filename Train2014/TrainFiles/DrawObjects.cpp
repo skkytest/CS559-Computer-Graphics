@@ -168,13 +168,16 @@ void DrawObjects::drawTrack(TrainView* thisTrainView, bool doingShadows){
 
 	//draw track with c1 continuity
 	/*
-	[-1  3 -3  1][P(0)]
-	[ 2 -5  4 -1][P(1)]
-	p(t) = 1/2 * [t^3 t^2 t 1][-1  0  1  0][P(2)]
-	[ 0  2  0  0][P(3)]
+							  [-ts 2-ts ts-2  ts ][P(0)]
+							  [2ts ts-3 3-2ts -ts][P(1)]
+	p(t) = 1/2 * [t^3 t^2 t 1][-ts  0    ts    0 ][P(2)]
+							  [ 0   1    0     0 ][P(3)]
 
 	P(1) and P(2) are present and next control points
 	*/
+
+	//local parameter to get tension from Window
+	float ts = (float)thisTrainView->tw->tension->value() / 5.0+0.5;
 
 	if (thisTrainView->world->continuity == 2){
 		glPushMatrix();
@@ -215,21 +218,20 @@ void DrawObjects::drawTrack(TrainView* thisTrainView, bool doingShadows){
 
 			for (float t = 0; t < 1; t += 0.001){
 				float px, py, pz;
-				px = 0.5*(((-1)*p0x + 3 * p1x + (-3)*p2x + p3x)*t*t*t + (2 * p0x - 5 * p1x + 4 * p2x - p3x)*t*t + ((-1)*p0x + p2x)*t + 2 * p1x);
-				py = 0.5*(((-1)*p0y + 3 * p1y + (-3)*p2y + p3y)*t*t*t + (2 * p0y - 5 * p1y + 4 * p2y - p3y)*t*t + ((-1)*p0y + p2y)*t + 2 * p1y);
-				pz = 0.5*(((-1)*p0z + 3 * p1z + (-3)*p2z + p3z)*t*t*t + (2 * p0z - 5 * p1z + 4 * p2z - p3z)*t*t + ((-1)*p0z + p2z)*t + 2 * p1z);
+				px = (((-ts)*p0x + (2-ts) * p1x + (ts-2)*p2x + ts*p3x)*t*t*t + (2*ts * p0x + (ts-3) * p1x + (3-2*ts) * p2x - ts*p3x)*t*t + ((-ts)*p0x + ts*p2x)*t +  p1x);
+				py = (((-ts)*p0y + (2-ts) * p1y + (ts-2)*p2y + ts*p3y)*t*t*t + (2*ts * p0y + (ts-3) * p1y + (3-2*ts) * p2y - ts*p3y)*t*t + ((-ts)*p0y + ts*p2y)*t +  p1y);
+				pz = (((-ts)*p0z + (2-ts) * p1z + (ts-2)*p2z + ts*p3z)*t*t*t + (2*ts * p0z + (ts-3) * p1z + (3-2*ts) * p2z - ts*p3z)*t*t + ((-ts)*p0z + ts*p2z)*t +  p1z);
 
 				glBegin(GL_POINTS);
-
 				glVertex3f(px, py, pz);
 				glEnd();
 
 				if (thisTrainView->world->trackType == 3){
 					float p = t + 0.001;
 					float tx, ty, tz;
-					tx = 0.5*(((-1)*p0x + 3 * p1x + (-3)*p2x + p3x)*p*p*p + (2 * p0x - 5 * p1x + 4 * p2x - p3x)*p*p + ((-1)*p0x + p2x)*p + 2 * p1x);
-					ty = 0.5*(((-1)*p0y + 3 * p1y + (-3)*p2y + p3y)*p*p*p + (2 * p0y - 5 * p1y + 4 * p2y - p3y)*p*p + ((-1)*p0y + p2y)*p + 2 * p1y);
-					tz = 0.5*(((-1)*p0z + 3 * p1z + (-3)*p2z + p3z)*p*p*p + (2 * p0z - 5 * p1z + 4 * p2z - p3z)*p*p + ((-1)*p0z + p2z)*p + 2 * p1z);
+					tx = (((-ts)*p0x + (2 - ts) * p1x + (ts - 2)*p2x + ts*p3x)*p*p*p + (2 * ts * p0x + (ts - 3) * p1x + (3 - 2 * ts) * p2x - ts*p3x)*p*p + ((-ts)*p0x + ts*p2x)*p + p1x);
+					ty = (((-ts)*p0y + (2 - ts) * p1y + (ts - 2)*p2y + ts*p3y)*p*p*p + (2 * ts * p0y + (ts - 3) * p1y + (3 - 2 * ts) * p2y - ts*p3y)*p*p + ((-ts)*p0y + ts*p2y)*p + p1y);
+					tz = (((-ts)*p0z + (2 - ts) * p1z + (ts - 2)*p2z + ts*p3z)*p*p*p + (2 * ts * p0z + (ts - 3) * p1z + (3 - 2 * ts) * p2z - ts*p3z)*p*p + ((-ts)*p0z + ts*p2z)*p + p1z);
 					glBegin(GL_QUADS);
 					//if (!doingShadows) glColor3f(0.867, 0.427, 0.133);
 					glVertex3f(tx, ty, tz + 5);
@@ -1343,4 +1345,46 @@ void DrawObjects::drawTank(TrainView* thisTrainView, bool doingShadows){
 	glPopMatrix();
 
 	glPopMatrix();
+}
+
+void DrawObjects::surfRevlution(TrainView* thisTrainView, bool doingShadows){
+
+	glPushMatrix();
+	glTranslated(-45, 0, -45);
+	float k=0,t=0;
+	for (float i = 0; i < 7; i += 0.01){
+		if (!doingShadows) glColor3f(0.986, 0.584-k, 0.49+k);
+		for (double k = 0; k < 2 * 3.14; k += 0.01){
+			glBegin(GL_POINTS);
+			glVertex3f(i * sin(k), 0.2*i*i, i* cos(k));
+			glEnd();
+		}
+		//change color
+		t += 0.01;
+		if (t-1>0){
+			t = 0;
+			k += 0.03;
+		}
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(-45, 0, -45);
+	float k1 = 0, t1 = 0;
+	for (float i = 0; i < 7; i += 0.01){
+		if (!doingShadows) glColor3f(0.986, 0.584 - k1, 0.49 + k1);
+		for (double k = 0; k < 2 * 3.14; k += 0.01){
+			glBegin(GL_POINTS);
+			glVertex3f(i * sin(k), 19.6 - 0.2*i*i, i* cos(k));
+			glEnd();
+		}
+		//change color
+		t1 += 0.01;
+		if (t1 - 1>0){
+			t1 = 0;
+			k1 += 0.03;
+		}
+	}
+	glPopMatrix();
+
 }

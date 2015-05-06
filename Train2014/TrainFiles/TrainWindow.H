@@ -69,6 +69,8 @@ public:
 	Fl_Button* runButton;
 	// if we're animating it, how fast should it go?
 	Fl_Value_Slider* speed;
+	//change tension of splines
+	Fl_Value_Slider* tension;
 	Fl_Button* arcLength;		// do we use arc length for speed?
 
 	//for physics

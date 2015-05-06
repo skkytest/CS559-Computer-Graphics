@@ -40,6 +40,7 @@ public:		// we don't make anything private - for no good reason
 	//I didn't take it as commoned above, just use this as a simply parameter to record the present number of the control point
 	float trainU = 0.0;
 	//This parameter is used to calculate how far the train goes from the ith controlpoint to the (i+1)th controlpoint
+	//vary from 0 to 1
 	float distance = 0.0;
 	//use this parameter to set arc-length
 	float delta = 0.0;
@@ -52,6 +53,8 @@ public:		// we don't make anything private - for no good reason
 	float viewx, viewy, viewz;
 	//add physics
 	bool physics = false;
+	//add tension
+	float tension = 0.7;
 
 	//simply save the comtinuity of the track
 	int continuity = 2 ;

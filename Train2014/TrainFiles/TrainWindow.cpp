@@ -84,7 +84,7 @@ TrainWindow::TrainWindow(const int x, const int y) : Fl_Double_Window(x,y,800,60
 
 		// browser to select spline types
 		// TODO: make sure these choices are the same as what the code supports
-		splineBrowser = new Fl_Browser(605,pty,120,75,"Spline Type");
+		splineBrowser = new Fl_Browser(605,pty,160,75,"Spline Type");
 		splineBrowser->type(2);		// select
 		splineBrowser->callback((Fl_Callback*)damageCB,this);
 		splineBrowser->add("Linear");
@@ -94,6 +94,16 @@ TrainWindow::TrainWindow(const int x, const int y) : Fl_Double_Window(x,y,800,60
 		splineBrowser->callback((Fl_Callback*)changeContinuity, this);
 
 		pty += 110;
+
+		//to change tension of the splines
+		tension = new Fl_Value_Slider(655, pty, 140, 20, "tension");
+		tension->range(0, 5);
+		tension->value(2);
+		tension->align(FL_ALIGN_LEFT);
+		tension->type(FL_HORIZONTAL);
+
+		pty += 40;
+
 
 		// add and delete points
 		Fl_Button* ap = new Fl_Button(605,pty,80,20,"Add Point");
@@ -213,6 +223,9 @@ void TrainWindow::advanceTrain(float dir)
 		speed /= 3;
 	}
 
+	//local parameter to get tension from Window
+	float ts = (float)this->tension->value() / 5.0+0.5;
+
 	float standLength = 70.1706;
 
 	bool arcFlag;
@@ -294,7 +307,7 @@ void TrainWindow::advanceTrain(float dir)
 		float p1y = this->world.points[i].pos.y;
 		float p1z = this->world.points[i].pos.z;
 
-		printf("%f %f %f \n", this->world.points[i].orient.x, this->world.points[i].orient.y, this->world.points[i].orient.z);
+		//printf("%f %f %f \n", this->world.points[i].orient.x, this->world.points[i].orient.y, this->world.points[i].orient.z);
 
 		//P[2]
 		p = (i + 1) % (world.points.size());
@@ -330,11 +343,11 @@ void TrainWindow::advanceTrain(float dir)
 			float preY;
 			float py = this->world.distance;
 			if (p2y > p1y){
-				preY = 0.5*(((-1)*p0y + 3 * p1y + (-3)*p2y + p3y)*py*py*py + (2 * p0y - 5 * p1y + 4 * p2y - p3y)*py*py + ((-1)*p0y + p2y)*py + 2 * p1y);
+				preY = ((-ts)*p0x + (2 - ts) * p1x + (ts - 2)*p2x + ts*p3x)*py*py*py + (2 * ts * p0x + (ts - 3) * p1x + (3 - 2 * ts) * p2x - ts*p3x)*py*py + ((-ts)*p0x + ts*p2x)*py + 2 * p1y;
 				phys = (0.5*length + p2y - preY) / (1.5*length)*2.5;
 			}
 			else if (p2y < p1y){
-				preY = 0.5*(((-1)*p0y + 3 * p1y + (-3)*p2y + p3y)*py*py*py + (2 * p0y - 5 * p1y + 4 * p2y - p3y)*py*py + ((-1)*p0y + p2y)*py + 2 * p1y);
+				preY = ((-ts)*p0x + (2 - ts) * p1x + (ts - 2)*p2x + ts*p3x)*py*py*py + (2 * ts * p0x + (ts - 3) * p1x + (3 - 2 * ts) * p2x - ts*p3x)*py*py + ((-ts)*p0x + ts*p2x)*py + 2 * p1y;
 				phys = (p1y - preY + 0.5*length) / (1.5*length)*2.5;
 			}
 			else{
@@ -364,13 +377,15 @@ void TrainWindow::advanceTrain(float dir)
 			//calculate matrix
 			float txx, tyy, tzz;
 			float rxx, ryy, rzz;
-			txx = 0.5*(((-1)*p0x + 3 * p1x + (-3)*p2x + p3x)*t*t*t + (2 * p0x - 5 * p1x + 4 * p2x - p3x)*t*t + ((-1)*p0x + p2x)*t + 2 * p1x);
-			tyy = 0.5*(((-1)*p0y + 3 * p1y + (-3)*p2y + p3y)*t*t*t + (2 * p0y - 5 * p1y + 4 * p2y - p3y)*t*t + ((-1)*p0y + p2y)*t + 2 * p1y);
-			tzz = 0.5*(((-1)*p0z + 3 * p1z + (-3)*p2z + p3z)*t*t*t + (2 * p0z - 5 * p1z + 4 * p2z - p3z)*t*t + ((-1)*p0z + p2z)*t + 2 * p1z);
+			txx = (((-ts)*p0x + (2 - ts) * p1x + (ts - 2)*p2x + ts*p3x)*t*t*t + (2 * ts * p0x + (ts - 3) * p1x + (3 - 2 * ts) * p2x - ts*p3x)*t*t + ((-ts)*p0x + ts*p2x)*t + p1x);
+			tyy = (((-ts)*p0y + (2 - ts) * p1y + (ts - 2)*p2y + ts*p3y)*t*t*t + (2 * ts * p0y + (ts - 3) * p1y + (3 - 2 * ts) * p2y - ts*p3y)*t*t + ((-ts)*p0y + ts*p2y)*t + p1y);
+			tzz = (((-ts)*p0z + (2 - ts) * p1z + (ts - 2)*p2z + ts*p3z)*t*t*t + (2 * ts * p0z + (ts - 3) * p1z + (3 - 2 * ts) * p2z - ts*p3z)*t*t + ((-ts)*p0z + ts*p2z)*t + p1z);
 
-			rxx = 0.5*(((-1)*p0x + 3 * p1x + (-3)*p2x + p3x)*s*s*s + (2 * p0x - 5 * p1x + 4 * p2x - p3x)*s*s + ((-1)*p0x + p2x)*s + 2 * p1x);
-			ryy = 0.5*(((-1)*p0y + 3 * p1y + (-3)*p2y + p3y)*s*s*s + (2 * p0y - 5 * p1y + 4 * p2y - p3y)*s*s + ((-1)*p0y + p2y)*s + 2 * p1y);
-			rzz = 0.5*(((-1)*p0z + 3 * p1z + (-3)*p2z + p3z)*s*s*s + (2 * p0z - 5 * p1z + 4 * p2z - p3z)*s*s + ((-1)*p0z + p2z)*s + 2 * p1z);
+
+			rxx = (((-ts)*p0x + (2 - ts) * p1x + (ts - 2)*p2x + ts*p3x)*s*s*s + (2 * ts * p0x + (ts - 3) * p1x + (3 - 2 * ts) * p2x - ts*p3x)*s*s + ((-ts)*p0x + ts*p2x)*s + p1x);
+			ryy = (((-ts)*p0y + (2 - ts) * p1y + (ts - 2)*p2y + ts*p3y)*s*s*s + (2 * ts * p0y + (ts - 3) * p1y + (3 - 2 * ts) * p2y - ts*p3y)*s*s + ((-ts)*p0y + ts*p2y)*s + p1y);
+			rzz = (((-ts)*p0z + (2 - ts) * p1z + (ts - 2)*p2z + ts*p3z)*s*s*s + (2 * ts * p0z + (ts - 3) * p1z + (3 - 2 * ts) * p2z - ts*p3z)*s*s + ((-ts)*p0z + ts*p2z)*s + p1z);
+
 			
 			float deltaDis = sqrt((txx-rxx)*(txx-rxx)+(tyy-ryy)*(tyy-ryy)+(tzz-rzz)*(tzz-rzz));
 
@@ -391,20 +406,24 @@ void TrainWindow::advanceTrain(float dir)
 		}
 
 		if (run){
+
+			t = this->world.distance;
+
 			//r is used to calculate the rotate angle of the train
 			float r;
-			r= world.distance + 0.005;
+			//r= world.distance + 0.001;
+			r = t + 0.001;
 
 			//calculate the matrix
 			float tx, ty, tz;
 			float rx, ry, rz;
-			tx = 0.5*(((-1)*p0x + 3 * p1x + (-3)*p2x + p3x)*t*t*t + (2 * p0x - 5 * p1x + 4 * p2x - p3x)*t*t + ((-1)*p0x + p2x)*t + 2 * p1x);
-			ty = 0.5*(((-1)*p0y + 3 * p1y + (-3)*p2y + p3y)*t*t*t + (2 * p0y - 5 * p1y + 4 * p2y - p3y)*t*t + ((-1)*p0y + p2y)*t + 2 * p1y);
-			tz = 0.5*(((-1)*p0z + 3 * p1z + (-3)*p2z + p3z)*t*t*t + (2 * p0z - 5 * p1z + 4 * p2z - p3z)*t*t + ((-1)*p0z + p2z)*t + 2 * p1z);
+			tx = (((-ts)*p0x + (2 - ts) * p1x + (ts - 2)*p2x + ts*p3x)*t*t*t + (2 * ts * p0x + (ts - 3) * p1x + (3 - 2 * ts) * p2x - ts*p3x)*t*t + ((-ts)*p0x + ts*p2x)*t + p1x);
+			ty = (((-ts)*p0y + (2 - ts) * p1y + (ts - 2)*p2y + ts*p3y)*t*t*t + (2 * ts * p0y + (ts - 3) * p1y + (3 - 2 * ts) * p2y - ts*p3y)*t*t + ((-ts)*p0y + ts*p2y)*t + p1y);
+			tz = (((-ts)*p0z + (2 - ts) * p1z + (ts - 2)*p2z + ts*p3z)*t*t*t + (2 * ts * p0z + (ts - 3) * p1z + (3 - 2 * ts) * p2z - ts*p3z)*t*t + ((-ts)*p0z + ts*p2z)*t + p1z);
 
-			rx = 0.5*(((-1)*p0x + 3 * p1x + (-3)*p2x + p3x)*r*r*r + (2 * p0x - 5 * p1x + 4 * p2x - p3x)*r*r + ((-1)*p0x + p2x)*r + 2 * p1x);
-			ry = 0.5*(((-1)*p0y + 3 * p1y + (-3)*p2y + p3y)*r*r*r + (2 * p0y - 5 * p1y + 4 * p2y - p3y)*r*r + ((-1)*p0y + p2y)*r + 2 * p1y);
-			rz = 0.5*(((-1)*p0z + 3 * p1z + (-3)*p2z + p3z)*r*r*r + (2 * p0z - 5 * p1z + 4 * p2z - p3z)*r*r + ((-1)*p0z + p2z)*r + 2 * p1z);
+			rx = (((-ts)*p0x + (2 - ts) * p1x + (ts - 2)*p2x + ts*p3x)*r*r*r + (2 * ts * p0x + (ts - 3) * p1x + (3 - 2 * ts) * p2x - ts*p3x)*r*r + ((-ts)*p0x + ts*p2x)*r + p1x);
+			ry = (((-ts)*p0y + (2 - ts) * p1y + (ts - 2)*p2y + ts*p3y)*r*r*r + (2 * ts * p0y + (ts - 3) * p1y + (3 - 2 * ts) * p2y - ts*p3y)*r*r + ((-ts)*p0y + ts*p2y)*r + p1y);
+			rz = (((-ts)*p0z + (2 - ts) * p1z + (ts - 2)*p2z + ts*p3z)*r*r*r + (2 * ts * p0z + (ts - 3) * p1z + (3 - 2 * ts) * p2z - ts*p3z)*r*r + ((-ts)*p0z + ts*p2z)*r + p1z);
 
 			this->world.xaxis = tx;
 			this->world.yaxis = ty;
@@ -433,11 +452,14 @@ void TrainWindow::advanceTrain(float dir)
 			}
 			this->world.heightAngle = atan(ydis / (sqrt(xdis*xdis + zdis*zdis))) * 360 / 6.28;
 
-			if (t >1){
-				this->world.distance -= 1;
-				this->world.trainU += 1;
+			if (t > 1.0){
+				this->world.distance -= 1.0;
+				this->world.trainU += 1;	
 			}
+			
+			
 			if (this->world.trainU == world.points.size()) this->world.trainU = 0;
+			
 		}
 	}
 
@@ -484,7 +506,7 @@ void TrainWindow::advanceTrain(float dir)
 		if (arcFlag){
 			float s; //calculate arc-length point
 
-			this->world.delta += 0.022*speed;
+			this->world.delta += 0.022*speed*2;
 			t = this->world.distance;
 			s = t + this->world.delta;
 
