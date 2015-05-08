@@ -33,7 +33,7 @@
 #pragma warning(push)
 #pragma warning(disable:4311)		// convert void* to long
 #pragma warning(disable:4312)		// convert long to void*
-#include <FL/Fl_Gl_Window.h>
+#include <FL/Fl_Gl_Window.H>
 #include <Fl/Fl.h>
 #include <GL/gl.h>
 #include <GL/glu.h>

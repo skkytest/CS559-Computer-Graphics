@@ -1393,27 +1393,47 @@ void DrawObjects::surfRevlution(bool doingShadows){
 }
 
 void DrawObjects::drawBillboard(TrainView* thisTrainView, bool doingShadows) {
+
+
 	glColor3f(1.0f, 1.0f, 1.0f);
+
+	glPushMatrix();
+	GLUquadric* cylQuad = gluNewQuadric();
+
+	glTranslatef(80, 0, -80);
+	glRotatef(-90, 1, 0, 0);
+	gluCylinder(cylQuad, 2.0, 2.0, 60, 100, 100);
+
+	glTranslatef(-60, 0, 0);
+	gluCylinder(cylQuad, 2.0, 2.0, 60, 100, 100);
+
+	glPopMatrix();
+
+
+	
 	glEnable(GL_TEXTURE_2D);
 	fetchTexture("opengl.jpg", false, false);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glBegin(GL_QUADS);
 	
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(0.0, 0.0, -80.0);
-	
 	glTexCoord2f(1.0, 0.0);
-	glVertex3f(64.0, 0.0, -80.0);
+	glVertex3f(80.0, 20.0, -80.0);
 	
 	glTexCoord2f(1.0, 1.0);
-	glVertex3f(64.0, 64.0, -80.0);
-
+	glVertex3f(80.0, 60.0, -80.0);
+	
 	glTexCoord2f(0.0, 1.0);
-	glVertex3f(0.0, 64.0, -80.0);
+	glVertex3f(20.0, 60.0, -80.0);
+
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(20.0, 20.0, -80.0);
 
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
+
+
+	
 }
 
 void DrawObjects::cubes(){
