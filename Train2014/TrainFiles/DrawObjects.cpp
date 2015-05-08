@@ -10,6 +10,8 @@
 #include"DrawObjects.h"
 #include "../Utilities/Texture.H"
 
+#include <time.h>
+
 //draw trees
 void DrawObjects::drawTrees(TrainView* thisTrainView, bool doingShadows){
 	glPushMatrix();
@@ -1348,7 +1350,7 @@ void DrawObjects::drawTank(TrainView* thisTrainView, bool doingShadows){
 	glPopMatrix();
 }
 
-void DrawObjects::surfRevlution(TrainView* thisTrainView, bool doingShadows){
+void DrawObjects::surfRevlution(bool doingShadows){
 
 	glPushMatrix();
 	glTranslated(-45, 0, -45);
@@ -1417,39 +1419,166 @@ void DrawObjects::drawBillboard(TrainView* thisTrainView, bool doingShadows) {
 void DrawObjects::cubes(){
 
 	glBegin(GL_QUADS);
+	//front
+	glNormal3f(0,0,1);
 	glVertex3f(0, 4, 0);
 	glVertex3f(0, 14, 0);
 	glVertex3f(0, 14, 10);
 	glVertex3f(0, 4, 10);
 
 	// back
+	glNormal3f(0,0,-1);
 	glVertex3f(30, 4, 0);
 	glVertex3f(30, 14, 0);
 	glVertex3f(30, 14, 10);
 	glVertex3f(30, 4, 10);
 
 	// top
+	glNormal3f(0,1,0);
 	glVertex3f(0, 14, 0);
 	glVertex3f(30, 14, 0);
 	glVertex3f(30, 14, 10);
 	glVertex3f(0, 14, 10);
 
 	// bottom
+	glNormal3f(0,-1,0);
 	glVertex3f(0, 4, 0);
 	glVertex3f(30, 4, 0);
 	glVertex3f(30, 4, 10);
 	glVertex3f(0, 4, 10);
 
 	// left
+	glNormal3f(-1,0,0);
 	glVertex3f(0, 4, 0);
 	glVertex3f(0, 14, 0);
 	glVertex3f(30, 14, 0);
 	glVertex3f(30, 4, 0);
 
 	// right
+	glNormal3f(1,0,0);
 	glVertex3f(0, 4, 10);
 	glVertex3f(0, 14, 10);
 	glVertex3f(30, 14, 10);
 	glVertex3f(30, 4, 10);
 	glEnd();
+	
+	//this is how we control the color of this world right...
+	//Throught a long I finally realize the reason all kinds of things change color automatically 
+	//The normal of a surface is important,so We need to set it correctlly
+	//However I don't have time to add all the normal to the original surface, so I used this tricky way
+	glNormal3f(0, 1, 0);
+
+}
+
+void DrawObjects::skybox() {
+	//back
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glEnable(GL_TEXTURE_2D);
+	fetchTexture("skybox/iceflats_bk.tga", false, false);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glBegin(GL_QUADS);
+
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(-300, 0, -300.0);
+
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(-300, 600, -300.0);
+
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(300, 600, -300.0);
+
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(300, 0, -300.0);
+
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+
+
+	//bottom
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glEnable(GL_TEXTURE_2D);
+	fetchTexture("skybox/iceflats_dn.tga", false, false);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glBegin(GL_QUADS);
+
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(-300, 1, 300.0);
+
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(-300, 1, -300.0);
+
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(300, 1, -300.0);
+
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(300, 1, 300.0);
+
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+
+	//right
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glEnable(GL_TEXTURE_2D);
+	fetchTexture("skybox/iceflats_rt.tga", false, false);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glBegin(GL_QUADS);
+
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(300, 0, -300.0);
+
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(300, 600, -300.0);
+
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(300, 600, 300.0);
+
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(300, 0, 300.0);
+
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+
+}
+
+void DrawObjects::flag(float flagColor, float flagShape, bool doingShadows){
+	//SYSTEMTIME sysTime;
+	//GetSystemTime(&sysTime);
+
+	glPushMatrix();
+	glTranslatef(-60,0,45);
+	for (float j = 0; j < 2. * 3.14; j += 0.01f)
+	{
+		glBegin(GL_LINES);
+		if (!doingShadows) glColor3f(1, 0.749, 0.49);
+		glVertex3f(cos(j), 0, sin(j));
+		glVertex3f(cos(j), 25, sin(j));
+		glEnd();
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-60,25,45);
+	glBegin(GL_LINES);
+	if (!doingShadows) glColor3f(1, 0.749, 0.49);
+	for (float i = 0; i < 2 * 3.14; i += 0.01){
+		glVertex3f(0, 0, 0);
+		glVertex3f(cos(i), 0, sin(i));
+	}
+	glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-60, 0, 45);
+	for (float j = 0; j < 10; j += 0.01f)
+	{
+		glBegin(GL_LINES);
+		if (!doingShadows) glColor3f(0.870, 0.246+flagColor, 0.258);
+		glVertex3f(j, 17, sin(j + flagShape));
+		glVertex3f(j, 25, sin(j + flagShape));
+		glEnd();
+	}
+	glPopMatrix();
 }

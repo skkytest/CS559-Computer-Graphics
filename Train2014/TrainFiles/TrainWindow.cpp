@@ -218,6 +218,15 @@ void TrainWindow::advanceTrain(float dir)
 	if (world.trainU > nct) world.trainU -= nct;
 	if (world.trainU < 0) world.trainU += nct;
 #endif
+	
+	//flag shap
+	this->world.flagColor += 0.05;
+	if (this->world.flagColor >= 0.6) this->world.flagColor = 0.0;
+	this->world.flagshape += 1;
+	if (this->world.flagshape >= 36.0) this->world.flagshape = 0.0;
+
+	this->world.tryTime += 0.05;
+
 	float speed = (float)this->speed->value();
 	if (this->trainCam->value()){
 		speed /= 3;

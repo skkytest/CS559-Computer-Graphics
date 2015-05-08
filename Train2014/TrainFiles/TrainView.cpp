@@ -18,6 +18,9 @@
 #include <windows.h>
 #include "GL/gl.h"
 #include "GL/glu.h"
+#include "glm/glm.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "ShaderTools.h"
 
@@ -242,12 +245,12 @@ void TrainView::drawStuff(bool doingShadows)
 	// don't draw the control points if you're driving 
 	// (otherwise you get sea-sick as you drive through them)
 	if (!tw->trainCam->value()) {
-		for(size_t i=0; i<world->points.size(); ++i) {
+		for (size_t i = 0; i < world->points.size(); ++i) {
 			if (!doingShadows) {
-				if ( ((int) i) != selectedCube)
-					glColor3ub(240,60,60);
+				if (((int)i) != selectedCube)
+					glColor3ub(240, 60, 60);
 				else
-					glColor3ub(240,240,30);
+					glColor3ub(240, 240, 30);
 			}
 			world->points[i].draw();
 		}
@@ -259,6 +262,107 @@ void TrainView::drawStuff(bool doingShadows)
 #endif
 
 	DrawObjects newDrawObjects;
+
+	/*
+	//This is a try of using shaders
+
+	//load shader first
+	static unsigned int shadedCubeShader = 0;
+	char* error;
+	if (!(shadedCubeShader = loadShader("ShadedCubeTest.vert", "ShadedCubeTest.frag", error))) {
+		std::string s = "Can't Load Shader:";
+		s += error;
+		fl_alert(s.c_str());
+	}
+
+	glBindAttribLocation(shadedCubeShader, 0, "position");
+	glBindAttribLocation(shadedCubeShader, 1, "color");
+
+	//create avariable to hold our handle to the vertex array object
+	GLuint vaoHandle;
+
+	// Wiehin the initialization, create and populate the vertex buffer objects for each attribute
+	float positionData[] = {
+		-0.5f,-0.5, 0.0f,
+		0.5f, -0.5f, 0.0f,
+		0.0f, 0.5f, 0.0f
+	};
+	float colorData[] = {
+		1.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 1.0f
+	};
+
+	//create the bvuffer objects
+	GLuint vboHandles[2];
+	glGenBuffers(2, vboHandles);
+	GLuint positionBufferHandle = vboHandles[0];
+	GLuint colorBufferHandle = vboHandles[1];
+
+	//populate the position buffer
+	glBindBuffer(GL_ARRAY_BUFFER, positionBufferHandle);
+	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), positionData, GL_STATIC_DRAW);
+
+	//populate the color buffer
+	glBindBuffer(GL_ARRAY_BUFFER, colorBufferHandle);
+	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), colorData, GL_STATIC_DRAW);
+
+	//create and bind to a vertex array object,
+	//which stores the relationshop between the buffers and the input attributes
+
+	//create and set-up the vertex array object
+	glGenVertexArrays(1, &vaoHandle);
+	glBindVertexArray(vaoHandle);
+
+	//Enable the vertex attributes arrays
+	glEnableVertexAttribArray(0); //vertex position
+	glEnableVertexAttribArray(1); //vertex color
+
+	//map index 0 to the position buffer
+	glBindBuffer(GL_ARRAY_BUFFER, positionBufferHandle);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
+
+	//map index 1 to the color buffer
+	glBindBuffer(GL_ARRAY_BUFFER, colorBufferHandle);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
+
+	glUseProgram(shadedCubeShader);
+
+	// Camera/View transformation
+	glm::mat4 view;
+	GLfloat radius = 10.0f;
+	GLfloat camX = sin(this->world->tryTime) * radius;
+	GLfloat camZ = cos(this->world->tryTime) * radius;
+	view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	// Projection 
+	glm::mat4 projection;
+	projection = glm::perspective(45.0f, (GLfloat)w() / (GLfloat)h(), 0.1f, 100.0f);
+
+	// Get their uniform location
+	GLint modelLoc = glGetUniformLocation(shadedCubeShader, "model");
+	GLint viewLoc = glGetUniformLocation(shadedCubeShader, "view");
+	GLint projLoc = glGetUniformLocation(shadedCubeShader, "projection");
+	// Pass the matrices to the shader
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+	//in the render function, bind to the vertex array object and call glDrawArrays to initiate rendering
+	glBindVertexArray(vaoHandle);
+
+	
+	glm::vec3 tri(0.0f, 0.0f, 0.0f);
+	glm::mat4 model;
+	model = glm::translate(model, tri);
+	GLfloat angle = 20.0f;
+	model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	//newDrawObjects.cubes();
+	glBindVertexArray(0);
+	
+	glUseProgram(0);
+	*/
 
 	glPushMatrix();
 	glTranslated(45, 0, -45);
@@ -283,12 +387,15 @@ void TrainView::drawStuff(bool doingShadows)
 	}
 	glPopMatrix();
 
+
 	//draw tree
 	newDrawObjects.drawTrees(this, doingShadows);
 	//draw track
 	newDrawObjects.drawTrack(this, doingShadows);
 	//try surface of revolution
-	newDrawObjects.surfRevlution(this, doingShadows);
+	newDrawObjects.surfRevlution(doingShadows);
+	//draw flag
+	newDrawObjects.flag(this->world->flagColor, this->world->flagshape, doingShadows);
 
 	// draw the train
 	// TODO: call your own train drawing code
@@ -344,6 +451,8 @@ void TrainView::drawStuff(bool doingShadows)
 
 	//draw billboard
 	newDrawObjects.drawBillboard(this, doingShadows);
+
+	//newDrawObjects.skybox();
 }
 
 // this tries to see which control point is under the mouse

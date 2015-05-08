@@ -39,20 +39,27 @@ public:		// we don't make anything private - for no good reason
 	// TODO: you might want to do this differently
 	//I didn't take it as commoned above, just use this as a simply parameter to record the present number of the control point
 	float trainU = 0.0;
+
 	//This parameter is used to calculate how far the train goes from the ith controlpoint to the (i+1)th controlpoint
 	//vary from 0 to 1
 	float distance = 0.0;
+
 	//use this parameter to set arc-length
 	float delta = 0.0;
+
 	//We use this parameter to decide the rotate angle of the train
 	float angle = 45.0228;
 	float heightAngle = 0;
+
 	//Those are parameters that move the train to the correspond space
 	float xaxis=47.8786, yaxis=4, zaxis=2.12132;
+
 	//those parameter are used to help trainCamera(ride view)
 	float viewx, viewy, viewz;
+
 	//add physics
 	bool physics = false;
+
 	//add tension
 	float tension = 0.7;
 
@@ -64,6 +71,15 @@ public:		// we don't make anything private - for no good reason
 
 	//track type
 	int trackType = 2;
+
+	//test shader transformation
+	float tryTime = 0;
+
+	//The flag in the world
+	//the color of the flag
+	float flagColor=0.0;
+	//the shape of the flag
+	float flagshape=0.0;
 
 	// read and write to files
 	void readPoints(const char* filename);

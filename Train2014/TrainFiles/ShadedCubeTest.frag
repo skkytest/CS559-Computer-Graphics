@@ -8,6 +8,6 @@ void main()
 {
 	//	gl_FragColor = vec4(1,0,0,1);
 	vec3 mycolor = normal * .5 + vec3(.5,.5,.5);
-	//gl_FragColor = vec4(mycolor.x,mycolor.y,mycolor.z,1);
-	gl_FragColor = vec4(0.2,0.7,0.3,1);
+	gl_FragColor = vec4(mycolor.x,mycolor.y,mycolor.z,1);
+	//gl_FragColor = vec4(0.2,0.2,0.8,1);
 }

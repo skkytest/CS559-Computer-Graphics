@@ -11,7 +11,9 @@ public:
 	void drawTrack(TrainView*, bool);
 	void drawTrain(TrainView*, bool);
 	void drawTank(TrainView*, bool);
-	void surfRevlution(TrainView*, bool);
+	void surfRevlution(bool);
 	void drawBillboard(TrainView*, bool);
 	void cubes();
+	void skybox();
+	void flag(float, float, bool);
 };

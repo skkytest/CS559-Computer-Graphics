@@ -24,6 +24,7 @@
 #include <GL/glu.h>
 
 #include "3DUtils.H"
+#include "../Utilities/Texture.H"
 
 #include <vector>
 using std::vector;
@@ -103,6 +104,7 @@ float floorColor2[3] = {0.180,0.545,0.341 }; // Dark color
 //*************************************************************************
 //
 // Draw the check board floor without texturing it
+// now I use the texture (May 6th)
 //===============================================================================
 void drawFloor(float size, int nSquares)
 //===============================================================================
@@ -129,6 +131,31 @@ void drawFloor(float size, int nSquares)
 		} // end of for j
 	}// end of for i
 	glEnd();
+
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glEnable(GL_TEXTURE_2D);
+	fetchTexture("skybox/iceflats_dn.tga", false, false);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glNormal3f(0, 1, 0);
+	glBegin(GL_QUADS);
+
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(-100, 0.1, 100.0);
+
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(-100, 0.1, -100.0);
+
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(100, 0.1, -100.0);
+
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(100, 0.1, 100.0);
+
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+	
+
 }
 
 //*************************************************************************
