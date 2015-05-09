@@ -41,7 +41,7 @@ void TrainView::resetArcball()
 	// set up the camera to look at the world
 	// these parameters might seem magical, and they kindof are
 	// a little trial and error goes a long way
-	arcball.setup(this,40,250,.2f,.4f,0);
+	arcball.setup(this,40,300,.2f,.4f,0);
 }
 
 // FlTk Event handler for the window
@@ -179,9 +179,9 @@ void TrainView::draw()
 
 	// now draw the ground plane
 	setupFloor();
-	glDisable(GL_LIGHTING);
-	drawFloor(200,10);
-	glEnable(GL_LIGHTING);
+	//glDisable(GL_LIGHTING);
+	//drawFloor(200,10);
+	//glEnable(GL_LIGHTING);
 	setupObjects();
 
 	// we draw everything twice - once for real, and then once for
@@ -446,6 +446,8 @@ void TrainView::drawStuff(bool doingShadows)
 	newDrawObjects.drawBillboard(this, doingShadows);
 
 	newDrawObjects.drawSkybox();
+
+	newDrawObjects.drawPlatform(this, doingShadows);
 }
 
 // this tries to see which control point is under the mouse

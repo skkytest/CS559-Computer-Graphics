@@ -1599,3 +1599,114 @@ void DrawObjects::flag(float flagColor, float flagShape, bool doingShadows){
 	}
 	glPopMatrix();
 }
+
+void DrawObjects::drawPlatform(TrainView* thisTrainView, bool doingShadows) {
+
+
+	glColor3f(0.5f, 0.5f, 0.5f);
+
+	glEnable(GL_TEXTURE_2D);
+	fetchTexture("concrete.jpg", false, false);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, NULL);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, NULL);
+	glBegin(GL_QUADS);
+	glNormal3f(0, 1, 0);
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(200.0, 0.0, 200.0);
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(200.0, 0.0, -200.0);
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(-200.0, 0.0, -200.0);
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(-200.0, 0.0, 200.0);
+	glEnd();
+	
+	for (int side = 0; side < 4; side++){
+	glPushMatrix();
+	glRotated(side * 90, 0, 1, 0);
+		fetchTexture("concrete-slope.jpg", false, false);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, 0.0, -200.0);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(200.0, 0.0, -200.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(200.0, -10.0, -220.0);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-200.0, -10.0, -220.0);
+		glEnd();
+		fetchTexture("concrete-edge.jpg", false, false);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, -10.0, -220.0);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(200.0, -10.0, -220.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(200.0, -100.0, -220.0);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-200.0, -100.0, -220.0);
+		glEnd();
+		fetchTexture("concrete-slope.jpg", false, false);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, -100.0, -220.0);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(200.0, -100.0, -220.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(200.0, -110.0, -200.0);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-200.0, -110.0, -200.0);
+		glEnd();
+
+		fetchTexture("concrete-corner.jpg", false, false);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, 0.0, -200.0);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(-200.0, -10.0, -220.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(-220.0, -10.0, -200.0);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, 0.0, -200.0);
+		glEnd();
+		fetchTexture("concrete-corner-edge.jpg", false, false);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-200.0, -10.0, -220.0);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, -100.0, -220.0);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(-220.0, -100.0, -200.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(-220.0, -10.0, -200.0);
+		glEnd();
+		fetchTexture("concrete-corner.jpg", false, false);
+		glBegin(GL_QUADS);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(-200.0, -100.0, -220.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(-200.0, -110.0, -200.0);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, -110.0, -200.0);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-220.0, -100.0, -200.0);
+		glEnd();
+	glPopMatrix();
+	}
+
+	fetchTexture("concrete.jpg", false, false);
+	glBegin(GL_QUADS);
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(200.0, -110.0, 200.0);
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(200.0, -110.0, -200.0);
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(-200.0, -110.0, -200.0);
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(-200.0, -110.0, 200.0);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+
+
+
+}

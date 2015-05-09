@@ -13,6 +13,7 @@ public:
 	void drawTank(TrainView*, bool);
 	void surfRevlution(bool);
 	void drawBillboard(TrainView*, bool);
+	void drawPlatform(TrainView*, bool);
 	void cubes();
 	void drawSkybox();
 	void flag(float, float, bool);
