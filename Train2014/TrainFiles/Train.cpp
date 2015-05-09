@@ -25,8 +25,10 @@ int main(int, char**)
 {
 	texturePaths.push_back(".");
 	texturePaths.push_back("./textures");
+	texturePaths.push_back("./skybox");
 	texturePaths.push_back("..");
 	texturePaths.push_back("../textures");
+		texturePaths.push_back("../skybox");
 
 	printf("CS559 Train Assignment\n");
 

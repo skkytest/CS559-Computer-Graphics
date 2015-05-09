@@ -1490,77 +1490,74 @@ void DrawObjects::cubes(){
 
 }
 
-void DrawObjects::skybox() {
-	//back
-	glColor3f(1.0f, 1.0f, 1.0f);
+void DrawObjects::drawSkybox() {
+
 	glEnable(GL_TEXTURE_2D);
-	fetchTexture("skybox/iceflats_bk.tga", false, false);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glPolygonMode(GL_BACK, GL_LINE);
+	glColorMaterial(GL_BACK, GL_AMBIENT_AND_DIFFUSE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	int skyboxSize = 500;
+	for (int face = 0; face < 4; face++){
+		switch (face){
+			case 3: fetchTexture("iceflats_ft.tga", false, false); break;
+			case 2: fetchTexture("iceflats_rt.tga", false, false); break;
+			case 1: fetchTexture("iceflats_bk.tga", false, false); break;
+			case 0: fetchTexture("iceflats_lf.tga", false, false); break;
+		}
+		glPushMatrix();
+		glRotatef(90*face, 0, 1, 0);
+
+		glBegin(GL_QUADS);
+
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(-skyboxSize, skyboxSize / 2, -skyboxSize-2);
+
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-skyboxSize, skyboxSize / 2, skyboxSize+2);
+
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-skyboxSize, skyboxSize / -2, skyboxSize+2);
+
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(-skyboxSize, skyboxSize / -2, -skyboxSize-2);
+
+		glEnd();
+		glPopMatrix();
+	}
+
+	int floorboxSize = skyboxSize + 2;
+	//up
+	fetchTexture("iceflats_up.tga", false, false);
 	glBegin(GL_QUADS);
-
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(-300, 0, -300.0);
-
-	glTexCoord2f(0.0, 1.0);
-	glVertex3f(-300, 600, -300.0);
-
-	glTexCoord2f(1.0, 1.0);
-	glVertex3f(300, 600, -300.0);
-
-	glTexCoord2f(1.0, 0.0);
-	glVertex3f(300, 0, -300.0);
-
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(floorboxSize, skyboxSize / 2 - 2, -floorboxSize);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(floorboxSize, skyboxSize / 2 - 2, floorboxSize);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-floorboxSize, skyboxSize / 2 - 2, floorboxSize);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(-floorboxSize, skyboxSize / 2 - 2, -floorboxSize);
 	glEnd();
-	glDisable(GL_TEXTURE_2D);
 
-
-	//bottom
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glEnable(GL_TEXTURE_2D);
-	fetchTexture("skybox/iceflats_dn.tga", false, false);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//dn
+	fetchTexture("iceflats_dn.tga", false, false);
 	glBegin(GL_QUADS);
-
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(-300, 1, 300.0);
-
-	glTexCoord2f(0.0, 1.0);
-	glVertex3f(-300, 1, -300.0);
-
-	glTexCoord2f(1.0, 1.0);
-	glVertex3f(300, 1, -300.0);
-
-	glTexCoord2f(1.0, 0.0);
-	glVertex3f(300, 1, 300.0);
-
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-floorboxSize, skyboxSize / -2 + 2, -floorboxSize);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(-floorboxSize, skyboxSize / -2 + 2, floorboxSize);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(floorboxSize, skyboxSize / -2 + 2, skyboxSize);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(floorboxSize, skyboxSize / -2 + 2, -floorboxSize);
 	glEnd();
+
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_TEXTURE_2D);
-
-	//right
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glEnable(GL_TEXTURE_2D);
-	fetchTexture("skybox/iceflats_rt.tga", false, false);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glBegin(GL_QUADS);
-
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(300, 0, -300.0);
-
-	glTexCoord2f(0.0, 1.0);
-	glVertex3f(300, 600, -300.0);
-
-	glTexCoord2f(1.0, 1.0);
-	glVertex3f(300, 600, 300.0);
-
-	glTexCoord2f(1.0, 0.0);
-	glVertex3f(300, 0, 300.0);
-
-	glEnd();
-	glDisable(GL_TEXTURE_2D);
-
 }
 
 void DrawObjects::flag(float flagColor, float flagShape, bool doingShadows){

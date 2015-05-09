@@ -14,6 +14,6 @@ public:
 	void surfRevlution(bool);
 	void drawBillboard(TrainView*, bool);
 	void cubes();
-	void skybox();
+	void drawSkybox();
 	void flag(float, float, bool);
 };

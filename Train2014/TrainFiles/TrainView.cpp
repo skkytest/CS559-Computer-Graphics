@@ -393,17 +393,10 @@ void TrainView::drawStuff(bool doingShadows)
 	//draw track
 	newDrawObjects.drawTrack(this, doingShadows);
 	//try surface of revolution
-	newDrawObjects.surfRevlution(doingShadows);
+	//newDrawObjects.surfRevlution(doingShadows);
 	//draw flag
 	newDrawObjects.flag(this->world->flagColor, this->world->flagshape, doingShadows);
 
-	// draw the train
-	// TODO: call your own train drawing code
-#ifdef EXAMPLE_SOLUTION
-	// don't draw the train if you're looking out the front window
-	if (!tw->trainCam->value())
-		drawTrain(this, doingShadows);
-#endif
 	if (!tw->trainCam->value()){
 		if (this->world->continuity == 1){
 			glPushMatrix();
@@ -452,7 +445,7 @@ void TrainView::drawStuff(bool doingShadows)
 	//draw billboard
 	newDrawObjects.drawBillboard(this, doingShadows);
 
-	//newDrawObjects.skybox();
+	newDrawObjects.drawSkybox();
 }
 
 // this tries to see which control point is under the mouse
