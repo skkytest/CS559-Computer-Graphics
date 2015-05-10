@@ -33,7 +33,7 @@
 #pragma warning(push)
 #pragma warning(disable:4311)		// convert void* to long
 #pragma warning(disable:4312)		// convert long to void*
-#include <FL/Fl_Gl_Window.h>
+#include <FL/Fl_Gl_Window.H>
 #include <Fl/Fl.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -81,7 +81,7 @@ void ArcBallCam::setProjection(bool doClear)
 
   // Compute the aspect ratio so we don't distort things
   double aspect = ((double) wind->w()) / ((double) wind->h());
-  gluPerspective(fieldOfView, aspect, .1, 1000);
+  gluPerspective(fieldOfView, aspect, .1, 2000);
 
   // Put the camera where we want it to be
   glMatrixMode(GL_MODELVIEW);

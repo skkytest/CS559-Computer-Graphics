@@ -133,17 +133,13 @@ TrainWindow::TrainWindow(const int x, const int y) : Fl_Double_Window(x,y,800,60
 
 		pty+=30;
 
-		// TODO: add widgets for all of your fancier features here
-#ifdef EXAMPLE_SOLUTION
-		makeExampleWidgets(this,pty);
-#endif
-
 		// browser to select model (train or tank)
 		modelBrowser = new Fl_Browser(605, pty, 80, 75, "Model Type");
 		modelBrowser->type(2);		// select
 		modelBrowser->callback((Fl_Callback*)damageCB, this);
 		modelBrowser->add("tank(main)");
-		modelBrowser->add("train(secondary)");
+		modelBrowser->add("train");
+		modelBrowser->add("Coaster");
 		modelBrowser->select(1);
 		modelBrowser->callback((Fl_Callback*)changeModel, this);
 
@@ -202,24 +198,9 @@ void TrainWindow::damageMe()
 // if the run button is pressed
 void TrainWindow::advanceTrain(float dir)
 {
-	// TODO: make this work for your train
-#ifdef EXAMPLE_SOLUTION
-	// note - we give a little bit more example code here than normal,
-	// so you can see how this works
 
-	if (arcLength->value()) {
-		float vel = ew.physics->value() ? physicsSpeed(this) * (float)speed->value() : dir * (float)speed->value();
-		world.trainU += arclenVtoV(world.trainU, vel, this);
-	} else {
-		world.trainU +=  dir * ((float)speed->value() * .1f);
-	}
-
-	float nct = static_cast<float>(world.points.size());
-	if (world.trainU > nct) world.trainU -= nct;
-	if (world.trainU < 0) world.trainU += nct;
-#endif
 	
-	//flag shap
+	//flag shape
 	this->world.flagColor += 0.05;
 	if (this->world.flagColor >= 0.6) this->world.flagColor = 0.0;
 	this->world.flagshape += 1;
