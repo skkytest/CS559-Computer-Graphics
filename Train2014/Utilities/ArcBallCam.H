@@ -164,7 +164,7 @@ public:
 	// assume the window does it
 	void getMouseNDC(float& x, float& y);
 
-//private:
+private:
 
 
 
@@ -188,10 +188,6 @@ public:
 	float isx,isy,isz;
 
 	Fl_Gl_Window* wind;
-
-	//May 8th 2015
-	//get the rotate matrix
-	HMatrix rotateMatrix;
 };
 
 // CVS Header - if you don't know what this is, don't worry about it

@@ -21,8 +21,8 @@
 #pragma warning(push)
 #pragma warning(disable:4312)
 #pragma warning(disable:4311)
-#include <Fl/Fl_Double_Window.H>
-#include <Fl/Fl_Button.H>
+#include <Fl/Fl_Double_Window.h>
+#include <Fl/Fl_Button.h>
 #include <Fl/Fl_Group.H>
 #include <Fl/Fl_Value_Slider.H>
 #include <Fl/Fl_Browser.H>
