@@ -1358,8 +1358,10 @@ void DrawObjects::surfRevlution(bool doingShadows){
 	for (float i = 0; i < 7; i += 0.01){
 		if (!doingShadows) glColor3f(0.986, 0.584-k, 0.49+k);
 		for (double k = 0; k < 2 * 3.14; k += 0.01){
-			glBegin(GL_POINTS);
+			glBegin(GL_QUAD_STRIP);
 			glVertex3f(i * sin(k), 0.2*i*i, i* cos(k));
+			float i1 = i + 0.01;
+			glVertex3f(i1 * sin(k), 0.2*i1*i1, i1* cos(k));
 			glEnd();
 		}
 		//change color
@@ -1393,27 +1395,47 @@ void DrawObjects::surfRevlution(bool doingShadows){
 }
 
 void DrawObjects::drawBillboard(TrainView* thisTrainView, bool doingShadows) {
+
+
 	glColor3f(1.0f, 1.0f, 1.0f);
+
+	glPushMatrix();
+	GLUquadric* cylQuad = gluNewQuadric();
+
+	glTranslatef(180, 0, -180);
+	glRotatef(-90, 1, 0, 0);
+	gluCylinder(cylQuad, 2.0, 2.0, 60, 100, 100);
+
+	glTranslatef(-60, 0, 0);
+	gluCylinder(cylQuad, 2.0, 2.0, 60, 100, 100);
+
+	glPopMatrix();
+
+
+	
 	glEnable(GL_TEXTURE_2D);
 	fetchTexture("opengl.jpg", false, false);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glBegin(GL_QUADS);
 	
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(0.0, 0.0, -80.0);
-	
 	glTexCoord2f(1.0, 0.0);
-	glVertex3f(64.0, 0.0, -80.0);
+	glVertex3f(180.0, 20.0, -180.0);
 	
 	glTexCoord2f(1.0, 1.0);
-	glVertex3f(64.0, 64.0, -80.0);
-
+	glVertex3f(180.0, 60.0, -180.0);
+	
 	glTexCoord2f(0.0, 1.0);
-	glVertex3f(0.0, 64.0, -80.0);
+	glVertex3f(120.0, 60.0, -180.0);
+
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(120.0, 20.0, -180.0);
 
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
+
+
+	
 }
 
 void DrawObjects::cubes(){
@@ -1470,77 +1492,74 @@ void DrawObjects::cubes(){
 
 }
 
-void DrawObjects::skybox() {
-	//back
-	glColor3f(1.0f, 1.0f, 1.0f);
+void DrawObjects::drawSkybox() {
+
 	glEnable(GL_TEXTURE_2D);
-	fetchTexture("skybox/iceflats_bk.tga", false, false);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glPolygonMode(GL_BACK, GL_LINE);
+	glColorMaterial(GL_BACK, GL_AMBIENT_AND_DIFFUSE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	int skyboxSize = 500;
+	for (int face = 0; face < 4; face++){
+		switch (face){
+			case 3: fetchTexture("iceflats_ft.tga", false, false); break;
+			case 2: fetchTexture("iceflats_rt.tga", false, false); break;
+			case 1: fetchTexture("iceflats_bk.tga", false, false); break;
+			case 0: fetchTexture("iceflats_lf.tga", false, false); break;
+		}
+		glPushMatrix();
+		glRotatef(90*face, 0, 1, 0);
+
+		glBegin(GL_QUADS);
+
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(-skyboxSize, skyboxSize / 2, -skyboxSize-2);
+
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-skyboxSize, skyboxSize / 2, skyboxSize+2);
+
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-skyboxSize, skyboxSize / -2, skyboxSize+2);
+
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(-skyboxSize, skyboxSize / -2, -skyboxSize-2);
+
+		glEnd();
+		glPopMatrix();
+	}
+
+	int floorboxSize = skyboxSize + 2;
+	//up
+	fetchTexture("iceflats_up.tga", false, false);
 	glBegin(GL_QUADS);
-
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(-300, 0, -300.0);
-
-	glTexCoord2f(0.0, 1.0);
-	glVertex3f(-300, 600, -300.0);
-
-	glTexCoord2f(1.0, 1.0);
-	glVertex3f(300, 600, -300.0);
-
-	glTexCoord2f(1.0, 0.0);
-	glVertex3f(300, 0, -300.0);
-
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(floorboxSize, skyboxSize / 2 - 2, -floorboxSize);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(floorboxSize, skyboxSize / 2 - 2, floorboxSize);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-floorboxSize, skyboxSize / 2 - 2, floorboxSize);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(-floorboxSize, skyboxSize / 2 - 2, -floorboxSize);
 	glEnd();
-	glDisable(GL_TEXTURE_2D);
 
-
-	//bottom
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glEnable(GL_TEXTURE_2D);
-	fetchTexture("skybox/iceflats_dn.tga", false, false);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//dn
+	fetchTexture("iceflats_dn.tga", false, false);
 	glBegin(GL_QUADS);
-
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(-300, 1, 300.0);
-
-	glTexCoord2f(0.0, 1.0);
-	glVertex3f(-300, 1, -300.0);
-
-	glTexCoord2f(1.0, 1.0);
-	glVertex3f(300, 1, -300.0);
-
-	glTexCoord2f(1.0, 0.0);
-	glVertex3f(300, 1, 300.0);
-
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-floorboxSize, skyboxSize / -2 + 2, -floorboxSize);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(-floorboxSize, skyboxSize / -2 + 2, floorboxSize);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(floorboxSize, skyboxSize / -2 + 2, skyboxSize);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(floorboxSize, skyboxSize / -2 + 2, -floorboxSize);
 	glEnd();
+
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_TEXTURE_2D);
-
-	//right
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glEnable(GL_TEXTURE_2D);
-	fetchTexture("skybox/iceflats_rt.tga", false, false);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glBegin(GL_QUADS);
-
-	glTexCoord2f(0.0, 0.0);
-	glVertex3f(300, 0, -300.0);
-
-	glTexCoord2f(0.0, 1.0);
-	glVertex3f(300, 600, -300.0);
-
-	glTexCoord2f(1.0, 1.0);
-	glVertex3f(300, 600, 300.0);
-
-	glTexCoord2f(1.0, 0.0);
-	glVertex3f(300, 0, 300.0);
-
-	glEnd();
-	glDisable(GL_TEXTURE_2D);
-
 }
 
 void DrawObjects::flag(float flagColor, float flagShape, bool doingShadows){
@@ -1574,11 +1593,121 @@ void DrawObjects::flag(float flagColor, float flagShape, bool doingShadows){
 	glTranslatef(-60, 0, 45);
 	for (float j = 0; j < 10; j += 0.01f)
 	{
+		if (!doingShadows) glColor3f(0.870, 0.246 + flagColor, 0.258);
 		glBegin(GL_LINES);
-		if (!doingShadows) glColor3f(0.870, 0.246+flagColor, 0.258);
-		glVertex3f(j, 17, sin(j + flagShape));
-		glVertex3f(j, 25, sin(j + flagShape));
+		glVertex3f(j, 17, sin(j - flagShape));
+		glVertex3f(j, 25, sin(j - flagShape));
 		glEnd();
 	}
 	glPopMatrix();
+}
+
+void DrawObjects::drawPlatform(TrainView* thisTrainView, bool doingShadows) {
+
+
+	glColor3f(0.5f, 0.5f, 0.5f);
+
+	glEnable(GL_TEXTURE_2D);
+	fetchTexture("concrete.jpg", false, false);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, NULL);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, NULL);
+	glBegin(GL_QUADS);
+	glNormal3f(0, 1, 0);
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(200.0, 0.0, 200.0);
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(200.0, 0.0, -200.0);
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(-200.0, 0.0, -200.0);
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(-200.0, 0.0, 200.0);
+	glEnd();
+	
+	for (int side = 0; side < 4; side++){
+	glPushMatrix();
+	glRotated(side * 90, 0, 1, 0);
+		fetchTexture("concrete-slope.jpg", false, false);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, 0.0, -200.0);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(200.0, 0.0, -200.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(200.0, -10.0, -220.0);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-200.0, -10.0, -220.0);
+		glEnd();
+		fetchTexture("concrete-edge.jpg", false, false);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, -10.0, -220.0);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(200.0, -10.0, -220.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(200.0, -100.0, -220.0);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-200.0, -100.0, -220.0);
+		glEnd();
+		fetchTexture("concrete-slope.jpg", false, false);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, -100.0, -220.0);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(200.0, -100.0, -220.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(200.0, -110.0, -200.0);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-200.0, -110.0, -200.0);
+		glEnd();
+
+		fetchTexture("concrete-corner.jpg", false, false);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, 0.0, -200.0);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(-200.0, -10.0, -220.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(-220.0, -10.0, -200.0);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, 0.0, -200.0);
+		glEnd();
+		fetchTexture("concrete-corner-edge.jpg", false, false);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-200.0, -10.0, -220.0);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, -100.0, -220.0);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(-220.0, -100.0, -200.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(-220.0, -10.0, -200.0);
+		glEnd();
+		fetchTexture("concrete-corner.jpg", false, false);
+		glBegin(GL_QUADS);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(-200.0, -100.0, -220.0);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(-200.0, -110.0, -200.0);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-200.0, -110.0, -200.0);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-220.0, -100.0, -200.0);
+		glEnd();
+	glPopMatrix();
+	}
+
+	fetchTexture("concrete.jpg", false, false);
+	glBegin(GL_QUADS);
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(200.0, -110.0, 200.0);
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(200.0, -110.0, -200.0);
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(-200.0, -110.0, -200.0);
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(-200.0, -110.0, 200.0);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+
+
 }

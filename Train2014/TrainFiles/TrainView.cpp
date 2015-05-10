@@ -23,6 +23,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ShaderTools.h"
+#include "../Utilities/Texture.H"
 
 #ifdef EXAMPLE_SOLUTION
 #include "TrainExample/TrainExample.H"
@@ -41,7 +42,7 @@ void TrainView::resetArcball()
 	// set up the camera to look at the world
 	// these parameters might seem magical, and they kindof are
 	// a little trial and error goes a long way
-	arcball.setup(this,40,250,.2f,.4f,0);
+	arcball.setup(this,40,300,.2f,.4f,0);
 }
 
 // FlTk Event handler for the window
@@ -263,13 +264,14 @@ void TrainView::drawStuff(bool doingShadows)
 
 	DrawObjects newDrawObjects;
 
-	/*
+	
 	//This is a try of using shaders
 
 	//load shader first
+	//static unsigned int shadedCubeShader = 0;
 	static unsigned int shadedCubeShader = 0;
 	char* error;
-	if (!(shadedCubeShader = loadShader("ShadedCubeTest.vert", "ShadedCubeTest.frag", error))) {
+	if (!(shadedCubeShader = loadShader("shaders/ShadedCubeTest.vert", "shaders/ShadedCubeTest.frag", error))) {
 		std::string s = "Can't Load Shader:";
 		s += error;
 		fl_alert(s.c_str());
@@ -277,66 +279,68 @@ void TrainView::drawStuff(bool doingShadows)
 
 	glBindAttribLocation(shadedCubeShader, 0, "position");
 	glBindAttribLocation(shadedCubeShader, 1, "color");
+	glBindAttribLocation(shadedCubeShader, 2, "textCoord");
 
-	//create avariable to hold our handle to the vertex array object
-	GLuint vaoHandle;
 
-	// Wiehin the initialization, create and populate the vertex buffer objects for each attribute
-	float positionData[] = {
-		-0.5f,-0.5, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f, 0.5f, 0.0f
+	// Within the initialization, create and populate the vertex buffer objects for each attribute
+
+	GLfloat vertices[] = {
+		// Positions         // Colors          // Texture Coords
+		-10.0f,  20.0f, -10.0f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // Top Right
+		-10.0f,  0.0f,  -10.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // Bottom Right
+		-30.0f,  0.0f,  -10.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // Bottom Left
+		-30.0f,  20.0f, -10.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f  // Top Left 
 	};
-	float colorData[] = {
-		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 1.0f
+	GLuint indices[] = {  // Note that we start from 0!
+		0, 1, 3, // First Triangle
+		1, 2, 3  // Second Triangle
 	};
 
-	//create the bvuffer objects
-	GLuint vboHandles[2];
-	glGenBuffers(2, vboHandles);
-	GLuint positionBufferHandle = vboHandles[0];
-	GLuint colorBufferHandle = vboHandles[1];
+	GLuint VBO, VAO, EBO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
 
-	//populate the position buffer
-	glBindBuffer(GL_ARRAY_BUFFER, positionBufferHandle);
-	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), positionData, GL_STATIC_DRAW);
+	glBindVertexArray(VAO);
 
-	//populate the color buffer
-	glBindBuffer(GL_ARRAY_BUFFER, colorBufferHandle);
-	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), colorData, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	//create and bind to a vertex array object,
-	//which stores the relationshop between the buffers and the input attributes
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	//create and set-up the vertex array object
-	glGenVertexArrays(1, &vaoHandle);
-	glBindVertexArray(vaoHandle);
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	// Color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+	// TexCoord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
 
-	//Enable the vertex attributes arrays
-	glEnableVertexAttribArray(0); //vertex position
-	glEnableVertexAttribArray(1); //vertex color
+	glBindVertexArray(0);
 
-	//map index 0 to the position buffer
-	glBindBuffer(GL_ARRAY_BUFFER, positionBufferHandle);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
+	fetchTexture("front.jpg", true, true);
 
-	//map index 1 to the color buffer
-	glBindBuffer(GL_ARRAY_BUFFER, colorBufferHandle);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
 
 	glUseProgram(shadedCubeShader);
 
 	// Camera/View transformation
 	glm::mat4 view;
-	GLfloat radius = 10.0f;
-	GLfloat camX = sin(this->world->tryTime) * radius;
-	GLfloat camZ = cos(this->world->tryTime) * radius;
-	view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	view = glm::translate(view, glm::vec3(-arcball.eyeX, -arcball.eyeY, -arcball.eyeZ));
+
 	// Projection 
 	glm::mat4 projection;
-	projection = glm::perspective(45.0f, (GLfloat)w() / (GLfloat)h(), 0.1f, 100.0f);
+	//projection = glm::perspective(arcball.fieldOfView, (GLfloat)w() / (GLfloat)h(), 0.1f, 1000.0f);
+	projection = glm::perspective(arcball.fieldOfView, (GLfloat)w() / (GLfloat)h(), 0.1f, 2000.0f);
+
+	// Rotate
+	glm::mat4 model;
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++)
+			model[i][j] = arcball.rotateMatrix[i][j];
+	}
 
 	// Get their uniform location
 	GLint modelLoc = glGetUniformLocation(shadedCubeShader, "model");
@@ -345,25 +349,28 @@ void TrainView::drawStuff(bool doingShadows)
 	// Pass the matrices to the shader
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-	//in the render function, bind to the vertex array object and call glDrawArrays to initiate rendering
-	glBindVertexArray(vaoHandle);
-
-	
-	glm::vec3 tri(0.0f, 0.0f, 0.0f);
-	glm::mat4 model;
-	model = glm::translate(model, tri);
-	GLfloat angle = 20.0f;
-	model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-	//newDrawObjects.cubes();
-	glBindVertexArray(0);
-	
-	glUseProgram(0);
-	*/
+	//Bind Texture
+	for (vector<Texture*>::iterator t = theTextures.begin(); t != theTextures.end(); t++){
+		if ((*t)->name.compare("opengl.jpg")){
+			glActiveTexture(GL_TEXTURE1);
+			(*t)->bind();
+			glUniform1i(glGetUniformLocation(shadedCubeShader, "ourTexture"),0);
+		}
+	}
 
+	//in the render function, bind to the vertex array object and call glDrawArrays to initiate rendering
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D,0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
+	
+	/*
 	glPushMatrix();
 	glTranslated(45, 0, -45);
 	if (!doingShadows){
@@ -386,24 +393,18 @@ void TrainView::drawStuff(bool doingShadows)
 		newDrawObjects.cubes();
 	}
 	glPopMatrix();
-
+	*/
+	glNormal3f(0, 1, 0);
 
 	//draw tree
 	newDrawObjects.drawTrees(this, doingShadows);
 	//draw track
 	newDrawObjects.drawTrack(this, doingShadows);
 	//try surface of revolution
-	newDrawObjects.surfRevlution(doingShadows);
+	//newDrawObjects.surfRevlution(doingShadows);
 	//draw flag
 	newDrawObjects.flag(this->world->flagColor, this->world->flagshape, doingShadows);
 
-	// draw the train
-	// TODO: call your own train drawing code
-#ifdef EXAMPLE_SOLUTION
-	// don't draw the train if you're looking out the front window
-	if (!tw->trainCam->value())
-		drawTrain(this, doingShadows);
-#endif
 	if (!tw->trainCam->value()){
 		if (this->world->continuity == 1){
 			glPushMatrix();
@@ -452,7 +453,11 @@ void TrainView::drawStuff(bool doingShadows)
 	//draw billboard
 	newDrawObjects.drawBillboard(this, doingShadows);
 
-	//newDrawObjects.skybox();
+	glDisable(GL_LIGHTING);
+	newDrawObjects.drawSkybox();
+	glEnable(GL_LIGHTING);
+
+	//newDrawObjects.drawPlatform(this, doingShadows);
 }
 
 // this tries to see which control point is under the mouse

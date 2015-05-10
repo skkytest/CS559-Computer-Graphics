@@ -13,6 +13,7 @@
 
 #include "TrainWindow.H"
 #include "Utilities/Texture.H"
+#include "Utilities/ShaderTools.H"
 
 #pragma warning(push)
 #pragma warning(disable:4312)
@@ -23,10 +24,10 @@
 
 int main(int, char**)
 {
-	texturePaths.push_back(".");
 	texturePaths.push_back("./textures");
-	texturePaths.push_back("..");
-	texturePaths.push_back("../textures");
+	texturePaths.push_back("./skybox");
+	shaderPaths.push_back("./shaders");
+	shaderPaths.push_back("./skybox");
 
 	printf("CS559 Train Assignment\n");
 
