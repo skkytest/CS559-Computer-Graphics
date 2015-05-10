@@ -201,6 +201,10 @@ void ArcBallCam::multMatrix()
 	HMatrix m;
 	getMatrix(m);
     glMultMatrixf((float*) m);
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++)
+			rotateMatrix[i][j] = m[i][j];
+	}
 }
 //**************************************************************************
 //

@@ -1,13 +1,11 @@
-// Very simple shader for CS559 example code
-// colors each face based on the normal vector
-// so the vertex shader has to pass the normal vector
+#version 400 core
+in vec3 ourColor;
+in vec2 TexCoord;
 
-varying vec3 normal;
+out vec4 color;
 
-void main()
-{
-	//	gl_FragColor = vec4(1,0,0,1);
-	vec3 mycolor = normal * .5 + vec3(.5,.5,.5);
-	gl_FragColor = vec4(mycolor.x,mycolor.y,mycolor.z,1);
-	//gl_FragColor = vec4(0.2,0.2,0.8,1);
+uniform sampler2D ourTexture;
+
+void main(){
+	color = texture(ourTexture, TexCoord);
 }

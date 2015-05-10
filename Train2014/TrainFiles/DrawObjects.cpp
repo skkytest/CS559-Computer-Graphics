@@ -1350,145 +1350,6 @@ void DrawObjects::drawTank(TrainView* thisTrainView, bool doingShadows){
 	glPopMatrix();
 }
 
-void DrawObjects::drawCoaster(TrainView* thisTrainView, bool doingShadows){
-	glPushMatrix();
-	int x = 10;
-	int z = 5;
-	glTranslated(x, 0, z);
-	glRotated(180, 0, 1, 0);
-	//interior
-	if (!doingShadows)
-		glColor3f(0.5, 0.5, 0.5);
-	glBegin(GL_QUADS);//base
-	glVertex3f(-10, 0.1, -4.9);
-	glVertex3f(-10, 0.1, 4.9);
-	glVertex3f(10, 0.1, 4.9);
-	glVertex3f(10, 0.1, -4.9);
-	glEnd();
-	glBegin(GL_QUADS);//wall
-	glVertex3f(-10, 0, -4.9);
-	glVertex3f(-10, 5, -4.9);
-	glVertex3f(2, 5, -4.9);
-	glVertex3f(10, 0, -4.9);
-	glEnd();
-	glBegin(GL_QUADS);//wall
-	glVertex3f(-10, 0, 4.9);
-	glVertex3f(-10, 5, 4.9);
-	glVertex3f(2, 5, 4.9);
-	glVertex3f(10, 0, 4.9);
-	glEnd();
-
-	//exterior
-	if (!doingShadows)
-		glColor3f(0.8, 0.8, 0.8);
-	glBegin(GL_QUADS);//wall
-	glVertex3f(-10, 0, -5);
-	glVertex3f(-10, 5, -5);
-	glVertex3f(2, 5, -5);
-	glVertex3f(10, 0, -5);
-	glEnd();
-	glBegin(GL_QUADS);//wall-seat-edge
-	glVertex3f(-4, 5, -5);
-	glVertex3f(-4, 7, -5);
-	glVertex3f(-3, 7, -5);
-	glVertex3f(-19.0 / 7.0, 5, -5);
-	glEnd();
-
-	glBegin(GL_QUADS);//wall
-	glVertex3f(-10, 0, 5);
-	glVertex3f(-10, 5, 5);
-	glVertex3f(2, 5, 5);
-	glVertex3f(10, 0, 5);
-	glEnd();
-	glBegin(GL_QUADS);//wall-seat-edge
-	glVertex3f(-4, 5, 5);
-	glVertex3f(-4, 7, 5);
-	glVertex3f(-3, 7, 5);
-	glVertex3f(-19.0 / 7.0, 5, 5);
-	glEnd();
-
-	glBegin(GL_QUADS);//back
-	glVertex3f(-10, 0, 5);
-	glVertex3f(-10, 0, -5);
-	glVertex3f(-10, 7, -5);
-	glVertex3f(-10, 7, 5);
-	glEnd();
-
-	glBegin(GL_QUADS);//front
-	glVertex3f(10, 0, 5);
-	glVertex3f(2, 5, 5);
-	glVertex3f(2, 5, -5);
-	glVertex3f(10, 0, -5);
-	glEnd();
-
-	glBegin(GL_QUADS);//wall--back-seat-edge
-	glVertex3f(-10, 5, -5);
-	glVertex3f(-10, 7, -5);
-	glVertex3f(-9, 7, -5);
-	glVertex3f(-61.0 / 7.0, 5, -5);
-	glEnd();
-
-	glBegin(GL_QUADS);//wall-back-seat-edge
-	glVertex3f(-10, 5, 5);
-	glVertex3f(-10, 7, 5);
-	glVertex3f(-9, 7, 5);
-	glVertex3f(-61.0 / 7.0, 5, 5);
-	glEnd();
-
-	glBegin(GL_QUADS);//wall-back-seat-edge
-	glVertex3f(-10, 5, -5);
-	glVertex3f(-10, 7, -5);
-	glVertex3f(-9, 7, -5);
-	glVertex3f(-61.0 / 7.0, 5, -5);
-	glEnd();
-
-	glBegin(GL_QUADS);//wall-back-seat-edge
-	glVertex3f(-10, 5, 5);
-	glVertex3f(-10, 7, 5);
-	glVertex3f(-9, 7, 5);
-	glVertex3f(-61.0 / 7.0, 5, 5);
-	glEnd();
-
-	//seats
-	if (!doingShadows)
-		glColor3f(0.2, 0.2, 0.2);
-	glBegin(GL_QUADS);//seat-back
-	glVertex3f(-4, 0, 5);
-	glVertex3f(-4, 7, 5);
-	glVertex3f(-4, 7, -5);
-	glVertex3f(-4, 0, -5);
-	glEnd();
-	glBegin(GL_QUADS);//seat-top
-	glVertex3f(-4, 7, 5);
-	glVertex3f(-4, 7, -5);
-	glVertex3f(-3, 7, -5);
-	glVertex3f(-3, 7, 5);
-	glEnd();
-	glBegin(GL_QUADS);//seat-seat
-	glVertex3f(-3, 7, 5);
-	glVertex3f(-3, 7, -5);
-	glVertex3f(-2, 0, -5);
-	glVertex3f(-2, 0, 5);
-	glEnd();
-
-
-
-	glBegin(GL_QUADS);//seat-top
-	glVertex3f(-10, 7, 5);
-	glVertex3f(-10, 7, -5);
-	glVertex3f(-9, 7, -5);
-	glVertex3f(-9, 7, 5);
-	glEnd();
-	glBegin(GL_QUADS);//seat-seat
-	glVertex3f(-9, 7, 5);
-	glVertex3f(-9, 7, -5);
-	glVertex3f(-8, 0, -5);
-	glVertex3f(-8, 0, 5);
-	glEnd();
-
-	glPopMatrix();
-}
-
 void DrawObjects::surfRevlution(bool doingShadows){
 
 	glPushMatrix();
@@ -1671,17 +1532,17 @@ void DrawObjects::drawSkybox() {
 
 	int floorboxSize = skyboxSize + 2;
 	//up
-	//fetchTexture("iceflats_up.tga", false, false);
-	//glBegin(GL_QUADS);
-	//	glTexCoord2f(1.0, 1.0);
-	//	glVertex3f(floorboxSize, skyboxSize / 2 - 2, -floorboxSize);
-	//	glTexCoord2f(0.0, 1.0);
-	//	glVertex3f(floorboxSize, skyboxSize / 2 - 2, floorboxSize);
-	//	glTexCoord2f(0.0, 0.0);
-	//	glVertex3f(-floorboxSize, skyboxSize / 2 - 2, floorboxSize);
-	//	glTexCoord2f(1.0, 0.0);
-	//	glVertex3f(-floorboxSize, skyboxSize / 2 - 2, -floorboxSize);
-	//glEnd();
+	fetchTexture("iceflats_up.tga", false, false);
+	glBegin(GL_QUADS);
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(floorboxSize, skyboxSize / 2 - 2, -floorboxSize);
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(floorboxSize, skyboxSize / 2 - 2, floorboxSize);
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-floorboxSize, skyboxSize / 2 - 2, floorboxSize);
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(-floorboxSize, skyboxSize / 2 - 2, -floorboxSize);
+	glEnd();
 
 	//dn
 	fetchTexture("iceflats_dn.tga", false, false);
@@ -1751,20 +1612,20 @@ void DrawObjects::drawPlatform(TrainView* thisTrainView, bool doingShadows) {
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, NULL);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, NULL);
 	glBegin(GL_QUADS);
-		glNormal3f(0, 1, 0);
-		glTexCoord2f(1.0, 0.0);
-		glVertex3f(200.0, 0.0, 200.0);
-		glTexCoord2f(1.0, 1.0);
-		glVertex3f(200.0, 0.0, -200.0);
-		glTexCoord2f(0.0, 1.0);
-		glVertex3f(-200.0, 0.0, -200.0);
-		glTexCoord2f(0.0, 0.0);
-		glVertex3f(-200.0, 0.0, 200.0);
+	glNormal3f(0, 1, 0);
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(200.0, 0.0, 200.0);
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(200.0, 0.0, -200.0);
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(-200.0, 0.0, -200.0);
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(-200.0, 0.0, 200.0);
 	glEnd();
 	
 	for (int side = 0; side < 4; side++){
-		glPushMatrix();
-		glRotated(side * 90, 0, 1, 0);
+	glPushMatrix();
+	glRotated(side * 90, 0, 1, 0);
 		fetchTexture("concrete-slope.jpg", false, false);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0, 0.0);
@@ -1832,31 +1693,6 @@ void DrawObjects::drawPlatform(TrainView* thisTrainView, bool doingShadows) {
 		glTexCoord2f(0.0, 1.0);
 		glVertex3f(-220.0, -100.0, -200.0);
 		glEnd();
-
-		//propellers
-		glPushMatrix();
-		//GLUquadric* cylQuad = gluNewQuadric();
-
-		glTranslatef(190, -115, 190);
-
-		SYSTEMTIME sysTime;
-		GetSystemTime(&sysTime);
-		double time = sysTime.wMilliseconds;
-		glRotated(360.0/1000.0*time, 0, 1, 0);
-		//gluCylinder(cylQuad, 5.0, 5.0, 150, 100, 100);
-
-		for (int fan = 0; fan < 4; fan++){
-			glPushMatrix();
-			glRotated(90*fan, 0, 1, 0);
-			glBegin(GL_QUADS);
-			glVertex3f(0, 0, 0);
-			glVertex3f(100, 0, 10);
-			glVertex3f(110, 0, 0);
-			glVertex3f(100, 0, -10);
-			glEnd();
-			glPopMatrix();
-		}
-		glPopMatrix();
 	glPopMatrix();
 	}
 
@@ -1872,8 +1708,6 @@ void DrawObjects::drawPlatform(TrainView* thisTrainView, bool doingShadows) {
 	glVertex3f(-200.0, -110.0, 200.0);
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
-
-
 
 
 }
