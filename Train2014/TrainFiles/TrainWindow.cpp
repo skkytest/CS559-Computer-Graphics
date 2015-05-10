@@ -143,7 +143,8 @@ TrainWindow::TrainWindow(const int x, const int y) : Fl_Double_Window(x,y,800,60
 		modelBrowser->type(2);		// select
 		modelBrowser->callback((Fl_Callback*)damageCB, this);
 		modelBrowser->add("tank(main)");
-		modelBrowser->add("train(secondary)");
+		modelBrowser->add("train");
+		modelBrowser->add("coaster");
 		modelBrowser->select(1);
 		modelBrowser->callback((Fl_Callback*)changeModel, this);
 

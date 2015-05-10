@@ -180,9 +180,9 @@ void TrainView::draw()
 
 	// now draw the ground plane
 	setupFloor();
-	glDisable(GL_LIGHTING);
+	/*glDisable(GL_LIGHTING);
 	drawFloor(200,10);
-	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);*/
 	setupObjects();
 
 	// we draw everything twice - once for real, and then once for
@@ -256,11 +256,7 @@ void TrainView::drawStuff(bool doingShadows)
 			world->points[i].draw();
 		}
 	}
-	// draw the track
-	// TODO: call your own track drawing code
-#ifdef EXAMPLE_SOLUTION
-	drawTrack(this, doingShadows);
-#endif
+
 
 	DrawObjects newDrawObjects;
 
@@ -412,6 +408,9 @@ void TrainView::drawStuff(bool doingShadows)
 			glRotatef(this->world->angle, 0, 1, 0);
 			glRotatef(-this->world->heightAngle, 0, 0, 1);
 			glTranslatef(-15, 0, -5);
+			if (this->world->model == 3){
+				newDrawObjects.drawCoaster(this, doingShadows);
+			}
 			if (this->world->model == 2){
 				newDrawObjects.drawTrain(this, doingShadows);
 			}
@@ -426,6 +425,9 @@ void TrainView::drawStuff(bool doingShadows)
 			glRotatef(this->world->angle, 0, 1, 0);
 			glRotatef(-this->world->heightAngle, 0, 0, 1);
 			glTranslatef(-15, 0, -5);
+			if (this->world->model == 3){
+				newDrawObjects.drawCoaster(this, doingShadows);
+			}
 			if (this->world->model == 2){
 				newDrawObjects.drawTrain(this, doingShadows);
 			}
@@ -440,6 +442,9 @@ void TrainView::drawStuff(bool doingShadows)
 			glRotatef(this->world->angle, 0, 1, 0);
 			glRotatef(-this->world->heightAngle, 0, 0, 1);
 			glTranslatef(-15, 0, -5);
+			if (this->world->model == 3){
+				newDrawObjects.drawCoaster(this, doingShadows);
+			}
 			if (this->world->model == 2){
 				newDrawObjects.drawTrain(this, doingShadows);
 			}
@@ -457,7 +462,8 @@ void TrainView::drawStuff(bool doingShadows)
 	newDrawObjects.drawSkybox();
 	glEnable(GL_LIGHTING);
 
-	//newDrawObjects.drawPlatform(this, doingShadows);
+	newDrawObjects.drawPlatform(this, doingShadows);
+	newDrawObjects.drawJet(this, doingShadows);
 }
 
 // this tries to see which control point is under the mouse

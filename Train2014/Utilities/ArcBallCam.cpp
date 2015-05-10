@@ -81,7 +81,7 @@ void ArcBallCam::setProjection(bool doClear)
 
   // Compute the aspect ratio so we don't distort things
   double aspect = ((double) wind->w()) / ((double) wind->h());
-  gluPerspective(fieldOfView, aspect, .1, 2000);
+  gluPerspective(fieldOfView, aspect, .1, 3000);
 
   // Put the camera where we want it to be
   glMatrixMode(GL_MODELVIEW);
