@@ -255,11 +255,7 @@ void TrainView::drawStuff(bool doingShadows)
 			world->points[i].draw();
 		}
 	}
-	// draw the track
-	// TODO: call your own track drawing code
-#ifdef EXAMPLE_SOLUTION
-	drawTrack(this, doingShadows);
-#endif
+
 
 	DrawObjects newDrawObjects;
 
@@ -404,6 +400,9 @@ void TrainView::drawStuff(bool doingShadows)
 			glRotatef(this->world->angle, 0, 1, 0);
 			glRotatef(-this->world->heightAngle, 0, 0, 1);
 			glTranslatef(-15, 0, -5);
+			if (this->world->model == 3){
+				newDrawObjects.drawCoaster(this, doingShadows);
+			}
 			if (this->world->model == 2){
 				newDrawObjects.drawTrain(this, doingShadows);
 			}
@@ -418,6 +417,9 @@ void TrainView::drawStuff(bool doingShadows)
 			glRotatef(this->world->angle, 0, 1, 0);
 			glRotatef(-this->world->heightAngle, 0, 0, 1);
 			glTranslatef(-15, 0, -5);
+			if (this->world->model == 3){
+				newDrawObjects.drawCoaster(this, doingShadows);
+			}
 			if (this->world->model == 2){
 				newDrawObjects.drawTrain(this, doingShadows);
 			}
@@ -432,6 +434,9 @@ void TrainView::drawStuff(bool doingShadows)
 			glRotatef(this->world->angle, 0, 1, 0);
 			glRotatef(-this->world->heightAngle, 0, 0, 1);
 			glTranslatef(-15, 0, -5);
+			if (this->world->model == 3){
+				newDrawObjects.drawCoaster(this, doingShadows);
+			}
 			if (this->world->model == 2){
 				newDrawObjects.drawTrain(this, doingShadows);
 			}

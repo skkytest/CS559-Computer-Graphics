@@ -79,6 +79,9 @@ void changeModel(Fl_Widget*, TrainWindow* tw){
 	if (tw->modelBrowser->selected(2)){
 		tw->world.model = 2;
 	}
+	if (tw->modelBrowser->selected(3)){
+		tw->world.model = 3;
+	}
 	tw->damageMe();
 }
 
