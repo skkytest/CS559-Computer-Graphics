@@ -1358,8 +1358,10 @@ void DrawObjects::surfRevlution(bool doingShadows){
 	for (float i = 0; i < 7; i += 0.01){
 		if (!doingShadows) glColor3f(0.986, 0.584-k, 0.49+k);
 		for (double k = 0; k < 2 * 3.14; k += 0.01){
-			glBegin(GL_POINTS);
+			glBegin(GL_QUAD_STRIP);
 			glVertex3f(i * sin(k), 0.2*i*i, i* cos(k));
+			float i1 = i + 0.01;
+			glVertex3f(i1 * sin(k), 0.2*i1*i1, i1* cos(k));
 			glEnd();
 		}
 		//change color
@@ -1400,7 +1402,7 @@ void DrawObjects::drawBillboard(TrainView* thisTrainView, bool doingShadows) {
 	glPushMatrix();
 	GLUquadric* cylQuad = gluNewQuadric();
 
-	glTranslatef(80, 0, -80);
+	glTranslatef(180, 0, -180);
 	glRotatef(-90, 1, 0, 0);
 	gluCylinder(cylQuad, 2.0, 2.0, 60, 100, 100);
 
@@ -1418,16 +1420,16 @@ void DrawObjects::drawBillboard(TrainView* thisTrainView, bool doingShadows) {
 	glBegin(GL_QUADS);
 	
 	glTexCoord2f(1.0, 0.0);
-	glVertex3f(80.0, 20.0, -80.0);
+	glVertex3f(180.0, 20.0, -180.0);
 	
 	glTexCoord2f(1.0, 1.0);
-	glVertex3f(80.0, 60.0, -80.0);
+	glVertex3f(180.0, 60.0, -180.0);
 	
 	glTexCoord2f(0.0, 1.0);
-	glVertex3f(20.0, 60.0, -80.0);
+	glVertex3f(120.0, 60.0, -180.0);
 
 	glTexCoord2f(0.0, 0.0);
-	glVertex3f(20.0, 20.0, -80.0);
+	glVertex3f(120.0, 20.0, -180.0);
 
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
@@ -1591,10 +1593,10 @@ void DrawObjects::flag(float flagColor, float flagShape, bool doingShadows){
 	glTranslatef(-60, 0, 45);
 	for (float j = 0; j < 10; j += 0.01f)
 	{
+		if (!doingShadows) glColor3f(0.870, 0.246 + flagColor, 0.258);
 		glBegin(GL_LINES);
-		if (!doingShadows) glColor3f(0.870, 0.246+flagColor, 0.258);
-		glVertex3f(j, 17, sin(j + flagShape));
-		glVertex3f(j, 25, sin(j + flagShape));
+		glVertex3f(j, 17, sin(j - flagShape));
+		glVertex3f(j, 25, sin(j - flagShape));
 		glEnd();
 	}
 	glPopMatrix();
