@@ -80,6 +80,7 @@ public:		// we don't make anything private - for no good reason
 	float flagColor=0.0;
 	//the shape of the flag
 	float flagshape=0.0;
+	float colorJudge = 1;
 
 	// read and write to files
 	void readPoints(const char* filename);

@@ -1350,6 +1350,145 @@ void DrawObjects::drawTank(TrainView* thisTrainView, bool doingShadows){
 	glPopMatrix();
 }
 
+void DrawObjects::drawCoaster(TrainView* thisTrainView, bool doingShadows){
+	glPushMatrix();
+	int x = 10;
+	int z = 5;
+	glTranslated(x, 0, z);
+	glRotated(180, 0, 1, 0);
+	//interior
+	if (!doingShadows)
+		glColor3f(0.5, 0.5, 0.5);
+	glBegin(GL_QUADS);//base
+	glVertex3f(-10, 0.1, -4.9);
+	glVertex3f(-10, 0.1, 4.9);
+	glVertex3f(10, 0.1, 4.9);
+	glVertex3f(10, 0.1, -4.9);
+	glEnd();
+	glBegin(GL_QUADS);//wall
+	glVertex3f(-10, 0, -4.9);
+	glVertex3f(-10, 5, -4.9);
+	glVertex3f(2, 5, -4.9);
+	glVertex3f(10, 0, -4.9);
+	glEnd();
+	glBegin(GL_QUADS);//wall
+	glVertex3f(-10, 0, 4.9);
+	glVertex3f(-10, 5, 4.9);
+	glVertex3f(2, 5, 4.9);
+	glVertex3f(10, 0, 4.9);
+	glEnd();
+
+	//exterior
+	if (!doingShadows)
+		glColor3f(0.8, 0.8, 0.8);
+	glBegin(GL_QUADS);//wall
+	glVertex3f(-10, 0, -5);
+	glVertex3f(-10, 5, -5);
+	glVertex3f(2, 5, -5);
+	glVertex3f(10, 0, -5);
+	glEnd();
+	glBegin(GL_QUADS);//wall-seat-edge
+	glVertex3f(-4, 5, -5);
+	glVertex3f(-4, 7, -5);
+	glVertex3f(-3, 7, -5);
+	glVertex3f(-19.0 / 7.0, 5, -5);
+	glEnd();
+
+	glBegin(GL_QUADS);//wall
+	glVertex3f(-10, 0, 5);
+	glVertex3f(-10, 5, 5);
+	glVertex3f(2, 5, 5);
+	glVertex3f(10, 0, 5);
+	glEnd();
+	glBegin(GL_QUADS);//wall-seat-edge
+	glVertex3f(-4, 5, 5);
+	glVertex3f(-4, 7, 5);
+	glVertex3f(-3, 7, 5);
+	glVertex3f(-19.0 / 7.0, 5, 5);
+	glEnd();
+
+	glBegin(GL_QUADS);//back
+	glVertex3f(-10, 0, 5);
+	glVertex3f(-10, 0, -5);
+	glVertex3f(-10, 7, -5);
+	glVertex3f(-10, 7, 5);
+	glEnd();
+
+	glBegin(GL_QUADS);//front
+	glVertex3f(10, 0, 5);
+	glVertex3f(2, 5, 5);
+	glVertex3f(2, 5, -5);
+	glVertex3f(10, 0, -5);
+	glEnd();
+
+	glBegin(GL_QUADS);//wall--back-seat-edge
+	glVertex3f(-10, 5, -5);
+	glVertex3f(-10, 7, -5);
+	glVertex3f(-9, 7, -5);
+	glVertex3f(-61.0 / 7.0, 5, -5);
+	glEnd();
+
+	glBegin(GL_QUADS);//wall-back-seat-edge
+	glVertex3f(-10, 5, 5);
+	glVertex3f(-10, 7, 5);
+	glVertex3f(-9, 7, 5);
+	glVertex3f(-61.0 / 7.0, 5, 5);
+	glEnd();
+
+	glBegin(GL_QUADS);//wall-back-seat-edge
+	glVertex3f(-10, 5, -5);
+	glVertex3f(-10, 7, -5);
+	glVertex3f(-9, 7, -5);
+	glVertex3f(-61.0 / 7.0, 5, -5);
+	glEnd();
+
+	glBegin(GL_QUADS);//wall-back-seat-edge
+	glVertex3f(-10, 5, 5);
+	glVertex3f(-10, 7, 5);
+	glVertex3f(-9, 7, 5);
+	glVertex3f(-61.0 / 7.0, 5, 5);
+	glEnd();
+
+	//seats
+	if (!doingShadows)
+		glColor3f(0.2, 0.2, 0.2);
+	glBegin(GL_QUADS);//seat-back
+	glVertex3f(-4, 0, 5);
+	glVertex3f(-4, 7, 5);
+	glVertex3f(-4, 7, -5);
+	glVertex3f(-4, 0, -5);
+	glEnd();
+	glBegin(GL_QUADS);//seat-top
+	glVertex3f(-4, 7, 5);
+	glVertex3f(-4, 7, -5);
+	glVertex3f(-3, 7, -5);
+	glVertex3f(-3, 7, 5);
+	glEnd();
+	glBegin(GL_QUADS);//seat-seat
+	glVertex3f(-3, 7, 5);
+	glVertex3f(-3, 7, -5);
+	glVertex3f(-2, 0, -5);
+	glVertex3f(-2, 0, 5);
+	glEnd();
+
+
+
+	glBegin(GL_QUADS);//seat-top
+	glVertex3f(-10, 7, 5);
+	glVertex3f(-10, 7, -5);
+	glVertex3f(-9, 7, -5);
+	glVertex3f(-9, 7, 5);
+	glEnd();
+	glBegin(GL_QUADS);//seat-seat
+	glVertex3f(-9, 7, 5);
+	glVertex3f(-9, 7, -5);
+	glVertex3f(-8, 0, -5);
+	glVertex3f(-8, 0, 5);
+	glEnd();
+
+	glPopMatrix();
+}
+
 void DrawObjects::surfRevlution(bool doingShadows){
 
 	glPushMatrix();
@@ -1501,7 +1640,7 @@ void DrawObjects::drawSkybox() {
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	int skyboxSize = 500;
+	int skyboxSize = 1000;
 	for (int face = 0; face < 4; face++){
 		switch (face){
 			case 3: fetchTexture("iceflats_ft.tga", false, false); break;
@@ -1565,9 +1704,11 @@ void DrawObjects::drawSkybox() {
 void DrawObjects::flag(float flagColor, float flagShape, bool doingShadows){
 	//SYSTEMTIME sysTime;
 	//GetSystemTime(&sysTime);
+	glNormal3f(0, 1, 0);
 
 	glPushMatrix();
-	glTranslatef(-60,0,45);
+	glTranslatef(-60,0,-90);
+	glScalef(2, 2, 2);
 	for (float j = 0; j < 2. * 3.14; j += 0.01f)
 	{
 		glBegin(GL_LINES);
@@ -1579,7 +1720,8 @@ void DrawObjects::flag(float flagColor, float flagShape, bool doingShadows){
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(-60,25,45);
+	glTranslatef(-60,25,-90);
+	glScalef(2, 2, 2);
 	glBegin(GL_LINES);
 	if (!doingShadows) glColor3f(1, 0.749, 0.49);
 	for (float i = 0; i < 2 * 3.14; i += 0.01){
@@ -1590,7 +1732,8 @@ void DrawObjects::flag(float flagColor, float flagShape, bool doingShadows){
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(-60, 0, 45);
+	glTranslatef(-60, 0, -90);
+	glScalef(2, 2, 2);
 	for (float j = 0; j < 10; j += 0.01f)
 	{
 		if (!doingShadows) glColor3f(0.870, 0.246 + flagColor, 0.258);
@@ -1693,6 +1836,36 @@ void DrawObjects::drawPlatform(TrainView* thisTrainView, bool doingShadows) {
 		glTexCoord2f(0.0, 1.0);
 		glVertex3f(-220.0, -100.0, -200.0);
 		glEnd();
+
+
+		//propellers
+		glPushMatrix();
+		GLUquadric* cylQuad = gluNewQuadric();
+
+		glTranslatef(190, -115, 190);
+		glPushMatrix();
+			glTranslated(0, 10, 0);
+			glRotated(90, 1, 0, 0);
+			gluCylinder(cylQuad, 5.0, 5.0, 10, 100, 100);
+		glPopMatrix();
+		SYSTEMTIME sysTime;
+		GetSystemTime(&sysTime);
+		double time = sysTime.wMilliseconds;
+		if (thisTrainView->tw->runButton->value())
+			glRotated(360.0 / 1000.0*time, 0, 1, 0);
+
+		for (int fan = 0; fan < 4; fan++){
+			glPushMatrix();
+			glRotated(90 * fan, 0, 1, 0);
+			glBegin(GL_QUADS);
+			glVertex3f(0, 0, 0);
+			glVertex3f(100, 0, 10);
+			glVertex3f(110, 0, 0);
+			glVertex3f(100, 0, -10);
+			glEnd();
+			glPopMatrix();
+		}
+		glPopMatrix();
 	glPopMatrix();
 	}
 
@@ -1709,5 +1882,68 @@ void DrawObjects::drawPlatform(TrainView* thisTrainView, bool doingShadows) {
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
 
+}
 
+void DrawObjects::drawJet(TrainView* thisTrainView, bool doingShadows){
+	//draw exaust
+	glPushMatrix();
+		glTranslated(0, -110, 0);
+		glRotated(90, 1, 0, 0);
+		glColor3d(0, 0, 0);
+		GLUquadric* cylQuad = gluNewQuadric();
+		gluCylinder(cylQuad, 35.0, 35.0, 10, 100, 100);
+	glPopMatrix();
+
+	double vertices[140][360][2];
+	double height = 140;
+	double points_in_rung = 360;
+	double PI = 3.14159265;
+
+	//generate the points
+	for (int rungs = 0; rungs < height; rungs++){
+		double radius = (-0.8*(rungs - 60.0)*(rungs - 60.0) + 5000.0) / 100.0; // r = (-0.8*(x-60)^2 +5000)/100
+		for (int point = 0; point < points_in_rung; point++){
+			double x = 1.0;
+			double z = 1.0;
+			x = radius * cos(point*PI / 180.0);
+			z = radius*sin(point*PI / 180.0);
+			vertices[rungs][point][0] = x;
+			vertices[rungs][point][1] = z;
+		}
+	}
+	glPushMatrix();
+	glTranslated(0,-110,0);
+
+	
+	int lastStepHeight = 0;
+	//draw the points
+	for (int rung = 0; rung < height; rung+=1){
+		double drung = rung;
+		glBegin(GL_LINE_STRIP);
+		//rgba(98, 101, 173, 0.62):0 -> rgba(255, 210, 142, 1):100
+		double r = 98;
+		double g = 101;
+		double b = 173;
+		double a = 0.32;
+		if (rung != 0){ //gradient
+			r += (255 - 98) * (drung/height);
+			g += (210 - 101) * (drung/height);
+			b += (142 - 173) * (drung/height);
+			a += (1 - 0.32) * (drung/height);
+		}
+		glColor4d(r/255, g/255, b/255, a);
+
+		//calculate wigglness
+		double variability = 0;
+		if (thisTrainView->tw->runButton->value())
+			variability = ((double)(rand() % 10 + 10)) / 100.0;
+		//shift in y, accounts for wigglness and opacity of bluer section
+		lastStepHeight += 1.0 / a + variability;
+		//draw rung
+		for (int point = 0; point < points_in_rung; point++){
+			glVertex3d(vertices[rung][point][0],-lastStepHeight, vertices[rung][point][1]);//-drung/2.0*variability
+		}
+		glEnd();
+	}
+	glPopMatrix();
 }

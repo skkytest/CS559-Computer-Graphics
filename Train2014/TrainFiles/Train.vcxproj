@@ -53,7 +53,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\glm;C:\Program Files %28x86%29\glew\include;C:\Program Files %28x86%29\fltk\include;C:\Users\Tianqi Nan\Desktop\559_Tools\glm;C:\Program Files %28x86%29\glm-0.9.5.4;C:\Program Files %28x86%29\FLTK 1.3.2\include;C:\Users\Tianqi Nan\Desktop\559_Tools\glew\include;C:\Program Files\glew-1.11.0\include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>soil\Simple OpenGL Image Library\src;C:\Program Files %28x86%29\glm;C:\Program Files %28x86%29\glew\include;C:\Program Files %28x86%29\fltk\include;C:\Users\Tianqi Nan\Desktop\559_Tools\glm;C:\Program Files %28x86%29\glm-0.9.5.4;C:\Program Files %28x86%29\FLTK 1.3.2\include;C:\Users\Tianqi Nan\Desktop\559_Tools\glew\include;C:\Program Files\glew-1.11.0\include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -63,8 +63,8 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>comctl32.lib;wsock32.lib;opengl32.lib;glu32.lib;fltkgl.lib;fltk.lib;glew32s.lib;fltkjpegd.lib;fltkpngd.lib;fltkzlibd.lib;fltkimagesd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\glew\lib;C:\Program Files %28x86%29\fltk\lib;C:\Program Files\glew-1.11.0\lib\Release\Win32;C:\Program Files %28x86%29\FLTK 1.3.2\lib;C:\Users\Tianqi Nan\Desktop\559_Tools\glew\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>comctl32.lib;wsock32.lib;opengl32.lib;glu32.lib;fltkgl.lib;fltk.lib;glew32s.lib;SOIL.lib;fltkjpegd.lib;fltkpngd.lib;fltkzlibd.lib;fltkimagesd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\glew\lib;C:\Program Files %28x86%29\fltk\lib;C:\Program Files\glew-1.11.0\lib\Release\Win32;C:\Program Files %28x86%29\FLTK 1.3.2\lib;C:\Users\Tianqi Nan\Desktop\559_Tools\glew\lib\Release\Win32;%(AdditionalLibraryDirectories);soil\Simple OpenGL Image Library\lib</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -74,7 +74,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Tianqi Nan\Desktop\559_Tools\glm;C:\Program Files %28x86%29\glm-0.9.5.4;C:\Program Files %28x86%29\FLTK 1.3.2\include;C:\Users\Tianqi Nan\Desktop\559_Tools\glew\include;\\wfs1\users%24\tianqi\Desktop\559_Tools\glew\include;C:\Program Files %28x86%29\FLTK 1.3.2\include;D:\Program Files\FLTK 1.3.2\include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>soil\Simple OpenGL Image Library\src;C:\Users\Tianqi Nan\Desktop\559_Tools\glm;C:\Program Files %28x86%29\glm-0.9.5.4;C:\Program Files %28x86%29\FLTK 1.3.2\include;C:\Users\Tianqi Nan\Desktop\559_Tools\glew\include;\\wfs1\users%24\tianqi\Desktop\559_Tools\glew\include;C:\Program Files %28x86%29\FLTK 1.3.2\include;D:\Program Files\FLTK 1.3.2\include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader />
@@ -82,8 +82,8 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>comctl32.lib;wsock32.lib;opengl32.lib;glu32.lib;fltkgl.lib;fltk.lib;glew32s.lib;fltkimages.lib;fltkjpeg.lib;fltkpng.lib;fltkgl.lib;fltk.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\Tianqi Nan\Desktop\559_Tools\glew\lib\Release\Win32;C:\Program Files %28x86%29\FLTK 1.3.2\lib;\\wfs1\users%24\tianqi\Desktop\559_Tools\glew\lib\Release\Win32;D:\Program Files\FLTK 1.3.2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>comctl32.lib;wsock32.lib;opengl32.lib;glu32.lib;fltkgl.lib;fltk.lib;glew32s.lib;SOIL.lib;fltkimages.lib;fltkjpeg.lib;fltkpng.lib;fltkgl.lib;fltk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Tianqi Nan\Desktop\559_Tools\glew\lib\Release\Win32;C:\Program Files %28x86%29\FLTK 1.3.2\lib;\\wfs1\users%24\tianqi\Desktop\559_Tools\glew\lib\Release\Win32;D:\Program Files\FLTK 1.3.2\lib;%(AdditionalLibraryDirectories);\\wfs1\users%24\tianqi\Desktop\soil\Simple OpenGL Image Library\lib</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>

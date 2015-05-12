@@ -24,6 +24,8 @@
 
 #include "ShaderTools.h"
 #include "../Utilities/Texture.H"
+#include "SOIL.h"
+
 
 #ifdef EXAMPLE_SOLUTION
 #include "TrainExample/TrainExample.H"
@@ -180,9 +182,9 @@ void TrainView::draw()
 
 	// now draw the ground plane
 	setupFloor();
-	glDisable(GL_LIGHTING);
+	/*glDisable(GL_LIGHTING);
 	drawFloor(200,10);
-	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);*/
 	setupObjects();
 
 	// we draw everything twice - once for real, and then once for
@@ -256,15 +258,11 @@ void TrainView::drawStuff(bool doingShadows)
 			world->points[i].draw();
 		}
 	}
-	// draw the track
-	// TODO: call your own track drawing code
-#ifdef EXAMPLE_SOLUTION
-	drawTrack(this, doingShadows);
-#endif
-
-	DrawObjects newDrawObjects;
 
 	
+	DrawObjects newDrawObjects;
+
+	/*
 	//This is a try of using shaders
 
 	//load shader first
@@ -286,10 +284,10 @@ void TrainView::drawStuff(bool doingShadows)
 
 	GLfloat vertices[] = {
 		// Positions         // Colors          // Texture Coords
-		-10.0f,  20.0f, -10.0f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // Top Right
-		-10.0f,  0.0f,  -10.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // Bottom Right
-		-30.0f,  0.0f,  -10.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // Bottom Left
-		-30.0f,  20.0f, -10.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f  // Top Left 
+		 30.0f,  20.0f, -10.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, // Top Right
+		 30.0f,  0.0f,  -10.0f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f, // Bottom Right
+		 10.0f,  0.0f,  -10.0f,  0.0f, 0.0f, 1.0f,  1.0f, 1.0f, // Bottom Left
+		 10.0f,  20.0f, -10.0f,  1.0f, 1.0f, 0.0f,  1.0f, 0.0f  // Top Left 
 	};
 	GLuint indices[] = {  // Note that we start from 0!
 		0, 1, 3, // First Triangle
@@ -321,7 +319,23 @@ void TrainView::drawStuff(bool doingShadows)
 
 	glBindVertexArray(0);
 
-	fetchTexture("front.jpg", true, true);
+	// Load and create a texture 
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture); // All upcoming GL_TEXTURE_2D operations now have effect on this texture object
+	// Set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// Set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Load image, create texture and generate mipmaps
+	int width, height;
+	unsigned char* image = SOIL_load_image("textures/front.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0); // Unbind texture when done, so we won't accidentily mess up our texture.
 
 
 	glUseProgram(shadedCubeShader);
@@ -351,25 +365,22 @@ void TrainView::drawStuff(bool doingShadows)
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-	//Bind Texture
-	for (vector<Texture*>::iterator t = theTextures.begin(); t != theTextures.end(); t++){
-		if ((*t)->name.compare("opengl.jpg")){
-			glActiveTexture(GL_TEXTURE1);
-			(*t)->bind();
-			glUniform1i(glGetUniformLocation(shadedCubeShader, "ourTexture"),0);
-		}
-	}
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glUniform1i(glGetUniformLocation(shadedCubeShader, "ourTexture"), 0);
 
 	//in the render function, bind to the vertex array object and call glDrawArrays to initiate rendering
 	glBindVertexArray(VAO);
+
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D,0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+
 	glUseProgram(0);
-	
+	*/
+
 	/*
 	glPushMatrix();
 	glTranslated(45, 0, -45);
@@ -412,6 +423,9 @@ void TrainView::drawStuff(bool doingShadows)
 			glRotatef(this->world->angle, 0, 1, 0);
 			glRotatef(-this->world->heightAngle, 0, 0, 1);
 			glTranslatef(-15, 0, -5);
+			if (this->world->model == 3){
+				newDrawObjects.drawCoaster(this, doingShadows);
+			}
 			if (this->world->model == 2){
 				newDrawObjects.drawTrain(this, doingShadows);
 			}
@@ -426,6 +440,9 @@ void TrainView::drawStuff(bool doingShadows)
 			glRotatef(this->world->angle, 0, 1, 0);
 			glRotatef(-this->world->heightAngle, 0, 0, 1);
 			glTranslatef(-15, 0, -5);
+			if (this->world->model == 3){
+				newDrawObjects.drawCoaster(this, doingShadows);
+			}
 			if (this->world->model == 2){
 				newDrawObjects.drawTrain(this, doingShadows);
 			}
@@ -440,6 +457,9 @@ void TrainView::drawStuff(bool doingShadows)
 			glRotatef(this->world->angle, 0, 1, 0);
 			glRotatef(-this->world->heightAngle, 0, 0, 1);
 			glTranslatef(-15, 0, -5);
+			if (this->world->model == 3){
+				newDrawObjects.drawCoaster(this, doingShadows);
+			}
 			if (this->world->model == 2){
 				newDrawObjects.drawTrain(this, doingShadows);
 			}
@@ -457,7 +477,8 @@ void TrainView::drawStuff(bool doingShadows)
 	newDrawObjects.drawSkybox();
 	glEnable(GL_LIGHTING);
 
-	//newDrawObjects.drawPlatform(this, doingShadows);
+	newDrawObjects.drawPlatform(this, doingShadows);
+	newDrawObjects.drawJet(this, doingShadows);
 }
 
 // this tries to see which control point is under the mouse
