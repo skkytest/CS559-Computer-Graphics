@@ -10,4 +10,5 @@
 *.vcxproj
 *.user
 *.filters
+*.idb
 
