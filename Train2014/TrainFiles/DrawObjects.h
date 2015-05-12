@@ -4,7 +4,6 @@
 //tank
 //track
 
-
 class DrawObjects{
 public:
 	void drawTrees(TrainView* , bool);
@@ -16,7 +15,8 @@ public:
 	void drawBillboard(TrainView*, bool);
 	void drawPlatform(TrainView*, bool);
 	void cubes();
-	void drawSkybox();
+	void drawSkybox(bool);
 	void flag(float, float, bool);
 	void drawJet(TrainView*, bool);
+	void ShaderCube(TrainView*, bool);
 };

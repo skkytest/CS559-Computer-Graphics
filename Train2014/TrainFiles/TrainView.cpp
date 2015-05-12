@@ -182,9 +182,11 @@ void TrainView::draw()
 
 	// now draw the ground plane
 	setupFloor();
-	/*glDisable(GL_LIGHTING);
-	drawFloor(200,10);
-	glEnable(GL_LIGHTING);*/
+	glDisable(GL_LIGHTING);
+	DrawObjects newObj;
+	newObj.drawPlatform(this,false);
+	//drawFloor(200,10);
+	glEnable(GL_LIGHTING);
 	setupObjects();
 
 	// we draw everything twice - once for real, and then once for
@@ -259,20 +261,22 @@ void TrainView::drawStuff(bool doingShadows)
 		}
 	}
 
-	
 	DrawObjects newDrawObjects;
 
-	/*
+	
 	//This is a try of using shaders
 
 	//load shader first
 	//static unsigned int shadedCubeShader = 0;
 	static unsigned int shadedCubeShader = 0;
-	char* error;
-	if (!(shadedCubeShader = loadShader("shaders/ShadedCubeTest.vert", "shaders/ShadedCubeTest.frag", error))) {
-		std::string s = "Can't Load Shader:";
-		s += error;
-		fl_alert(s.c_str());
+	if (!this->world->imageShader){
+		char* error;
+		if (!(shadedCubeShader = loadShader("shaders/ShadedCubeTest.vert", "shaders/ShadedCubeTest.frag", error))) {
+			std::string s = "Can't Load Shader:";
+			s += error;
+			fl_alert(s.c_str());
+		}
+		this->world->imageShader = !this->world->imageShader;
 	}
 
 	glBindAttribLocation(shadedCubeShader, 0, "position");
@@ -284,10 +288,10 @@ void TrainView::drawStuff(bool doingShadows)
 
 	GLfloat vertices[] = {
 		// Positions         // Colors          // Texture Coords
-		 30.0f,  20.0f, -10.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, // Top Right
-		 30.0f,  0.0f,  -10.0f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f, // Bottom Right
-		 10.0f,  0.0f,  -10.0f,  0.0f, 0.0f, 1.0f,  1.0f, 1.0f, // Bottom Left
-		 10.0f,  20.0f, -10.0f,  1.0f, 1.0f, 0.0f,  1.0f, 0.0f  // Top Left 
+		0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Top Right
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Bottom Right
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom Left
+		-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // Top Left 
 	};
 	GLuint indices[] = {  // Note that we start from 0!
 		0, 1, 3, // First Triangle
@@ -331,7 +335,7 @@ void TrainView::drawStuff(bool doingShadows)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// Load image, create texture and generate mipmaps
 	int width, height;
-	unsigned char* image = SOIL_load_image("textures/front.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+	unsigned char* image = SOIL_load_image("textures/welcome.png", &width, &height, 0, SOIL_LOAD_RGB);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	SOIL_free_image_data(image);
@@ -347,7 +351,7 @@ void TrainView::drawStuff(bool doingShadows)
 	// Projection 
 	glm::mat4 projection;
 	//projection = glm::perspective(arcball.fieldOfView, (GLfloat)w() / (GLfloat)h(), 0.1f, 1000.0f);
-	projection = glm::perspective(arcball.fieldOfView, (GLfloat)w() / (GLfloat)h(), 0.1f, 2000.0f);
+	projection = glm::perspective(arcball.fieldOfView, (GLfloat)w() / (GLfloat)h(), 0.1f, 3000.0f);
 
 	// Rotate
 	glm::mat4 model;
@@ -355,6 +359,10 @@ void TrainView::drawStuff(bool doingShadows)
 		for (int j = 0; j < 4; j++)
 			model[i][j] = arcball.rotateMatrix[i][j];
 	}
+	model = glm::translate(model, glm::vec3(0, 1, 0));
+	model = glm::scale(model,glm::vec3(100,1,100));
+	model = glm::rotate(model, 90.0f, glm::vec3(1,0,0));
+
 
 	// Get their uniform location
 	GLint modelLoc = glGetUniformLocation(shadedCubeShader, "model");
@@ -374,12 +382,9 @@ void TrainView::drawStuff(bool doingShadows)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
 
 	glUseProgram(0);
-	*/
+	
 
 	/*
 	glPushMatrix();
@@ -473,11 +478,15 @@ void TrainView::drawStuff(bool doingShadows)
 	//draw billboard
 	newDrawObjects.drawBillboard(this, doingShadows);
 
-	glDisable(GL_LIGHTING);
-	newDrawObjects.drawSkybox();
-	glEnable(GL_LIGHTING);
+	newDrawObjects.ShaderCube(this, doingShadows);
 
-	newDrawObjects.drawPlatform(this, doingShadows);
+	//glDisable(GL_LIGHTING);
+	newDrawObjects.drawSkybox(doingShadows);
+	//glEnable(GL_LIGHTING);
+
+	//I draw platform in the setfloor position
+	//newDrawObjects.drawPlatform(this, doingShadows);
+
 	newDrawObjects.drawJet(this, doingShadows);
 }
 

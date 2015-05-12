@@ -82,6 +82,10 @@ public:		// we don't make anything private - for no good reason
 	float flagshape=0.0;
 	float colorJudge = 1;
 
+	//for shader
+	bool cubeShader = 0;
+	bool imageShader = 0;
+
 	// read and write to files
 	void readPoints(const char* filename);
 	void writePoints(const char* filename);
