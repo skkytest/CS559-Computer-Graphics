@@ -87,8 +87,19 @@ void changeModel(Fl_Widget*, TrainWindow* tw){
 
 //callback that add physics
 void getPhysics(Fl_Widget*, TrainWindow* tw){
+	if (tw->world.physics == true)
+		tw->world.physics = false;
+	else
+		tw->world.physics = true;
 
-	tw->world.physics = true;
+	tw->damageMe();
+}
+
+void getmeteorites(Fl_Widget*, TrainWindow* tw){
+	if (tw->world.meteorites == true)
+		tw->world.meteorites = false;
+	else
+		tw->world.meteorites = true;
 
 	tw->damageMe();
 }

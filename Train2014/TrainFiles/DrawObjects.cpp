@@ -1659,6 +1659,44 @@ void DrawObjects::drawBillboard(TrainView* thisTrainView, bool doingShadows) {
 
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
+
+	//the other side
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	glPushMatrix();
+	GLUquadric* side = gluNewQuadric();
+
+	glTranslatef(-60, 0, -180);
+	glRotatef(-90, 1, 0, 0);
+	gluCylinder(side, 2.0, 2.0, 60, 100, 100);
+
+	glTranslatef(-80, 0, 0);
+	gluCylinder(side, 2.0, 2.0, 60, 100, 100);
+
+	glPopMatrix();
+
+
+
+	glEnable(GL_TEXTURE_2D);
+	fetchTexture("otherside.jpg", false, false);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glBegin(GL_QUADS);
+
+	glTexCoord2f(1.0, 0.0);
+	glVertex3f(-60.0, 20.0, -180.0);
+
+	glTexCoord2f(1.0, 1.0);
+	glVertex3f(-60.0, 60.0, -180.0);
+
+	glTexCoord2f(0.0, 1.0);
+	glVertex3f(-140.0, 60.0, -180.0);
+
+	glTexCoord2f(0.0, 0.0);
+	glVertex3f(-140.0, 20.0, -180.0);
+
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
 }
 
 void DrawObjects::cubes(){
@@ -2309,4 +2347,324 @@ void DrawObjects::ShaderCube(TrainView* thisTrainView, bool doingShadows){
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
 	*/
+}
+
+void DrawObjects::drawrock(TrainView* thisTrainView, bool doingShadows){
+	static unsigned int rock = 0;
+	if (!thisTrainView->world->rock){
+		char* error;
+		if (!(rock = loadShader("shaders/rock.vert", "shaders/rock.frag", error))) {
+			std::string s = "Can't Load Shader:";
+			s += error;
+			fl_alert(s.c_str());
+		}
+		thisTrainView->world->rock = !thisTrainView->world->rock;
+	}
+
+	glBindAttribLocation(rock, 0, "position");
+	glBindAttribLocation(rock, 1, "color");
+	glBindAttribLocation(rock, 2, "textCoord");
+
+	// Within the initialization, create and populate the vertex buffer objects for each attribute
+
+	GLfloat vertices[] = {
+		// Positions         // Colors          // Texture Coords
+		0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Top Right
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Bottom Right
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom Left
+		-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // Top Left 
+	};
+	GLuint indices[] = {  // Note that we start from 0!
+		0, 1, 3, // First Triangle
+		1, 2, 3  // Second Triangle
+	};
+
+	// Camera/View transformation
+	glm::mat4 view;
+	view = glm::translate(view, glm::vec3(-thisTrainView->arcball.eyeX, -thisTrainView->arcball.eyeY, -thisTrainView->arcball.eyeZ));
+	// Projection 
+	glm::mat4 projection;
+	//projection = glm::perspective(arcball.fieldOfView, (GLfloat)w() / (GLfloat)h(), 0.1f, 1000.0f);
+	projection = glm::perspective(thisTrainView->arcball.fieldOfView, (GLfloat)thisTrainView->w() / (GLfloat)thisTrainView->h(), 0.1f, 3000.0f);
+
+	GLuint amount = 100;
+	glm::mat4* modelMatrices;
+	modelMatrices = new glm::mat4[amount];
+	SYSTEMTIME sysTime;
+	GetSystemTime(&sysTime);
+	srand(1); // initialize random seed	
+	GLfloat radius = 150.0f;
+	GLfloat offset = 25.0f;
+	for (GLuint i = 0; i < amount; i++)
+	{
+		glm::mat4 model;
+		for (int i = 0; i < 4; i++){
+			for (int j = 0; j < 4; j++)
+				model[i][j] = thisTrainView->arcball.rotateMatrix[i][j];
+		}
+		/*
+		// 1. Translation: Randomly displace along circle with radius 'radius' in range [-offset, offset]
+		GLfloat angle = (GLfloat)i / (GLfloat)amount * 360.0f;
+		GLfloat displacement = (rand() % (GLint)(2 * offset * 100)) / 100.0f - offset;
+		GLfloat x = sin(angle) * radius + displacement;
+		displacement = (rand() % (GLint)(2 * offset * 100)) / 100.0f - offset;
+		GLfloat y = -2.5f + displacement * 0.4f; // Keep height of asteroid field smaller compared to width of x and z
+		displacement = (rand() % (GLint)(2 * offset * 100)) / 100.0f - offset;
+		GLfloat z = cos(angle) * radius + displacement;
+		model = glm::translate(model, glm::vec3(x, y, z));
+
+		// 2. Scale: Scale between 0.05 and 0.25f
+		GLfloat scale = (rand() % 20) / 100.0f + 0.05;
+		//model = glm::scale(model, glm::vec3(scale));
+		model = glm::scale(model, glm::vec3(100,100,100));
+
+		// 3. Rotation: add random rotation around a (semi)randomly picked rotation axis vector
+		GLfloat rotAngle = (rand() % 360);
+		model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+
+		// 4. Now add to list of matrices
+		*/
+		model = glm::scale(model, glm::vec3(10, 10, 10));
+		modelMatrices[i] = model;
+	}
+
+	GLuint VBO, VAO, EBO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+	/*
+	GLuint buffer;
+	glGenBuffers(1, &buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (GLvoid*)0);
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (GLvoid*)(sizeof(glm::vec4)));
+	glEnableVertexAttribArray(5);
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (GLvoid*)(2 * sizeof(glm::vec4)));
+	glEnableVertexAttribArray(6);
+	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (GLvoid*)(3 * sizeof(glm::vec4)));
+	glVertexAttribDivisor(3, 1);
+	glVertexAttribDivisor(4, 1);
+	glVertexAttribDivisor(5, 1);
+	glVertexAttribDivisor(6, 1);
+	*/
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	// Color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+	// TexCoord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
+
+	glBindVertexArray(0);
+
+
+	// Load and create a texture 
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture); // All upcoming GL_TEXTURE_2D operations now have effect on this texture object
+	// Set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// Set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Load image, create texture and generate mipmaps
+	int width, height;
+	unsigned char* image = SOIL_load_image("textures/welcome.png", &width, &height, 0, SOIL_LOAD_RGB);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0); // Unbind texture when done, so we won't accidentily mess up our texture.
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glUniform1i(glGetUniformLocation(rock, "ourTexture"), 0);
+
+	for (GLuint i = 0; i < amount; i++)
+	{
+		glUseProgram(rock);
+	// Get their uniform location
+	//GLint modelLoc = glGetUniformLocation(rock, "model");
+	GLint viewLoc = glGetUniformLocation(rock, "view");
+	GLint projLoc = glGetUniformLocation(rock, "projection");
+	// Pass the matrices to the shader
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	/*
+	glUseProgram(rock);
+
+	glBindVertexArray(VAO);
+	glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, amount);
+	glBindVertexArray(0);
+
+	glUseProgram(0);
+	*/
+
+	
+		
+		glUniformMatrix4fv(glGetUniformLocation(rock, "model"), 1, GL_FALSE, glm::value_ptr(modelMatrices[i]));
+		
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+		glUseProgram(0);
+	}
+}
+
+void DrawObjects::drawrock1(TrainView* thisTrainView, bool doingShadows){
+	static unsigned int rock1 = 0;
+	if (!thisTrainView->world->rock1){
+		char* error;
+		if (!(rock1 = loadShader("shaders/ShadedCubeTest.vert", "shaders/ShadedCubeTest.frag", error))) {
+			std::string s = "Can't Load Shader:";
+			s += error;
+			fl_alert(s.c_str());
+		}
+		thisTrainView->world->rock1 = !thisTrainView->world->rock1;
+	}
+
+	glBindAttribLocation(rock1, 0, "position");
+	glBindAttribLocation(rock1, 1, "color");
+	glBindAttribLocation(rock1, 2, "textCoord");
+
+
+	// Within the initialization, create and populate the vertex buffer objects for each attribute
+
+	GLfloat vertices[] = {
+		// Positions         // Colors          // Texture Coords
+		0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Top Right
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Bottom Right
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom Left
+		-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // Top Left 
+	};
+	GLuint indices[] = {  // Note that we start from 0!
+		0, 1, 3, // First Triangle
+		1, 2, 3  // Second Triangle
+	};
+
+	GLuint VBO, VAO, EBO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	// Color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+	// TexCoord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
+
+	glBindVertexArray(0);
+
+	// Load and create a texture 
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture); // All upcoming GL_TEXTURE_2D operations now have effect on this texture object
+	// Set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// Set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Load image, create texture and generate mipmaps
+	int width, height;
+	unsigned char* image = SOIL_load_image("textures/concrete1.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0); // Unbind texture when done, so we won't accidentily mess up our texture.
+
+	// Camera/View transformation
+	glm::mat4 view;
+	view = glm::translate(view, glm::vec3(-thisTrainView->arcball.eyeX, -thisTrainView->arcball.eyeY, -thisTrainView->arcball.eyeZ));
+
+	// Projection 
+	glm::mat4 projection;
+	//projection = glm::perspective(arcball.fieldOfView, (GLfloat)w() / (GLfloat)h(), 0.1f, 1000.0f);
+	projection = glm::perspective(thisTrainView->arcball.fieldOfView, (GLfloat)thisTrainView->w() / (GLfloat)thisTrainView->h(), 0.1f, 3000.0f);
+
+	// Rotate
+	GLuint amount = 1000;
+	glm::mat4* modelMatrices;
+	modelMatrices = new glm::mat4[amount];
+	SYSTEMTIME sysTime;
+	GetSystemTime(&sysTime);
+	GLfloat radius = 330.0f;
+	GLfloat offset = 25.0f;
+	srand(1); // initialize random seed	
+	for (GLuint i = 0; i < amount; i++)
+	{
+		glm::mat4 model;
+		for (int i = 0; i < 4; i++){
+			for (int j = 0; j < 4; j++)
+				model[i][j] = thisTrainView->arcball.rotateMatrix[i][j];
+		}
+		// 1. Translation: Randomly displace along circle with radius 'radius' in range [-offset, offset]
+		GLfloat angle = (GLfloat)i / (GLfloat)amount * 360.0f;
+		GLfloat displacement = (rand() % (GLint)(2 * offset * 100)) / 100.0f - offset;
+		GLfloat x = sin(angle) * radius + displacement;
+		displacement = (rand() % (GLint)(2 * offset * 100)) / 100.0f - offset;
+		GLfloat y = -2.5f + displacement * 0.4f; // Keep height of asteroid field smaller compared to width of x and z
+		displacement = (rand() % (GLint)(2 * offset * 100)) / 100.0f - offset;
+		GLfloat z = cos(angle) * radius + displacement;
+		model = glm::translate(model, glm::vec3(x, y-30, z));
+		//model = glm::translate(model, glm::vec3(0, 15, 0));
+		model = glm::scale(model, glm::vec3(10, 1, 10));
+
+		GLfloat rotAngle = (rand() % 360);
+		model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+
+		//model = glm::rotate(model, 90.0f, glm::vec3(1, 0, 0));
+		modelMatrices[i] = model;
+	}
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glUniform1i(glGetUniformLocation(rock1, "ourTexture"), 0);
+
+	for (GLuint i = 0; i < amount; i++){
+
+		glUseProgram(rock1);
+
+		// Get their uniform location
+		GLint modelLoc = glGetUniformLocation(rock1, "model");
+		GLint viewLoc = glGetUniformLocation(rock1, "view");
+		GLint projLoc = glGetUniformLocation(rock1, "projection");
+		// Pass the matrices to the shader
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrices[i]));
+
+		//in the render function, bind to the vertex array object and call glDrawArrays to initiate rendering
+		glBindVertexArray(VAO);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+
+
+		glUseProgram(0);
+	}
 }

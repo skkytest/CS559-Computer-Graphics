@@ -25,6 +25,9 @@ void changeModel(Fl_Widget*, TrainWindow* tw);
 //callback that add physics
 void getPhysics(Fl_Widget*, TrainWindow* tw);
 
+//callback that add meteorites
+void getmeteorites(Fl_Widget*, TrainWindow* tw);
+
 //callback that change track
 void changeTrack(Fl_Widget*, TrainWindow* tw);
 

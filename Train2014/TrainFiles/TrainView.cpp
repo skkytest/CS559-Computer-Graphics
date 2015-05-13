@@ -488,6 +488,10 @@ void TrainView::drawStuff(bool doingShadows)
 	//newDrawObjects.drawPlatform(this, doingShadows);
 
 	newDrawObjects.drawJet(this, doingShadows);
+
+	if (this->world->meteorites){
+		newDrawObjects.drawrock1(this, doingShadows);
+	}
 }
 
 // this tries to see which control point is under the mouse
