@@ -243,6 +243,9 @@ void TrainView::setProjection()
 // (otherwise, you get colored shadows)
 // this gets called twice per draw - once for the objects, once for the shadows
 // TODO: if you have other objects in the world, make sure to draw them
+static unsigned int shadedCubeShader = 0;
+unsigned char* welcomeImage;
+bool welcomeImageSet = false;
 void TrainView::drawStuff(bool doingShadows)
 {
 	// draw the control points
@@ -267,7 +270,6 @@ void TrainView::drawStuff(bool doingShadows)
 
 	//load shader first
 	//static unsigned int shadedCubeShader = 0;
-	static unsigned int shadedCubeShader = 0;
 	if (!this->world->imageShader){
 		char* error;
 		if (!(shadedCubeShader = loadShader("shaders/ShadedCubeTest.vert", "shaders/ShadedCubeTest.frag", error))) {
@@ -334,10 +336,12 @@ void TrainView::drawStuff(bool doingShadows)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// Load image, create texture and generate mipmaps
 	int width, height;
-	unsigned char* image = SOIL_load_image("textures/welcome.png", &width, &height, 0, SOIL_LOAD_RGB);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	if (!welcomeImageSet){
+		welcomeImage = SOIL_load_image("textures/welcome.png", &width, &height, 0, SOIL_LOAD_RGB);
+		welcomeImageSet = true;
+	}
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, welcomeImage);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0); // Unbind texture when done, so we won't accidentily mess up our texture.
 
 
@@ -385,30 +389,6 @@ void TrainView::drawStuff(bool doingShadows)
 	glUseProgram(0);
 	
 
-	/*
-	glPushMatrix();
-	glTranslated(45, 0, -45);
-	if (!doingShadows){
-		static unsigned int shadedCubeShader = 0;
-		static bool triedCubeShader = false;
-		if (!shadedCubeShader && !triedCubeShader) {
-			triedCubeShader = true;
-			char* error;
-			if (!(shadedCubeShader = loadShader("ShadedCubeTest.vert", "ShadedCubeTest.frag", error))) {
-				std::string s = "Can't Load Cube Shader:";
-				s += error;
-				fl_alert(s.c_str());
-			}
-		}
-		glUseProgram(shadedCubeShader);
-		newDrawObjects.cubes();
-		glUseProgram(0);
-	}
-	else{
-		newDrawObjects.cubes();
-	}
-	glPopMatrix();
-	*/
 	glNormal3f(0, 1, 0);
 
 	//draw tree
@@ -479,9 +459,8 @@ void TrainView::drawStuff(bool doingShadows)
 
 	newDrawObjects.ShaderCube(this, doingShadows);
 
-	//glDisable(GL_LIGHTING);
 	newDrawObjects.drawSkybox(doingShadows);
-	//glEnable(GL_LIGHTING);
+
 
 	//I draw platform in the setfloor position
 	//newDrawObjects.drawPlatform(this, doingShadows);

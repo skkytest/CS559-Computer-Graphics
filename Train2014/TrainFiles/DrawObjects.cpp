@@ -1873,7 +1873,7 @@ void DrawObjects::drawPlatform(TrainView* thisTrainView, bool doingShadows) {
 	glColor3f(0.5f, 0.5f, 0.5f);
 
 	glEnable(GL_TEXTURE_2D);
-	fetchTexture("concrete.jpg", false, false);
+	fetchTexture("grass.jpeg", false, false);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, NULL);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, NULL);
 	glBegin(GL_QUADS);
@@ -2007,6 +2007,7 @@ void DrawObjects::drawPlatform(TrainView* thisTrainView, bool doingShadows) {
 }
 
 void DrawObjects::drawJet(TrainView* thisTrainView, bool doingShadows){
+
 	//draw exaust
 	glPushMatrix();
 		glTranslated(0, -110, 0);
