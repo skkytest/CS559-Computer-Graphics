@@ -19,4 +19,5 @@ public:
 	void flag(float, float, bool);
 	void drawJet(TrainView*, bool);
 	void ShaderCube(TrainView*, bool);
+	void drawWeeds(TrainView*, bool);
 };

@@ -2149,164 +2149,137 @@ void DrawObjects::ShaderCube(TrainView* thisTrainView, bool doingShadows){
 	glUseProgram(0);
 	
 
-/*
-	static unsigned int cube = 0;
-	char* error;
-	if (!(cube = loadShader("shaders/cube.vert", "shaders/cube.frag", error))) {
-		std::string s = "Can't Load Shader:";
-		s += error;
-		fl_alert(s.c_str());
+}
+
+double weedPositions[10][2] = {-1};
+bool weedsPositioned = false;
+GLuint weedID = 0;
+bool triedGettingWeed = false;
+//int weedShaderId = 0;
+//bool triedWeedShader = false;
+void DrawObjects::drawWeeds(TrainView* thisTrainView, bool doingShadows){
+
+	SYSTEMTIME sysTime;
+	GetSystemTime(&sysTime);
+	srand(time(NULL));
+	glEnable(GL_TEXTURE_2D);
+	if (weedsPositioned == false){
+		for (int weed = 0; weed < 10; weed++){
+			weedPositions[weed][0] = rand() % 380 - 190;
+			weedPositions[weed][1] = rand() % 380 - 190;
+		}
+		weedsPositioned = true;
 	}
-
-	glBindAttribLocation(cube, 0, "position");
-
-	GLfloat vertices[] = {
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-
-		-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f
-	};
-	GLuint VBO, VAO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	// Position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	// TexCoord attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
-
-	glBindVertexArray(0); // Unbind VAO
+	
+	if (triedGettingWeed == false){
+		triedGettingWeed = true;
+		if (sysTime.wHour > 6 && sysTime.wDay < 18)
+			weedID = SOIL_load_OGL_texture("textures/weeds_flower.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
+		else
+			weedID = SOIL_load_OGL_texture("textures/weeds_bud.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
+		
+		if (weedID == 0){
+			printf("difficulties getting weed/n");
+		}
+	}
+	glBindTexture(GL_TEXTURE_2D, weedID);
+	glColor4d(1, 1.0, 1.0, 1.0);
 
 
-	// Load and create a texture 
-	GLuint texture1;
-	GLuint texture2;
-	// ====================
-	// Texture 1
-	// ====================
-	glGenTextures(1, &texture1);
-	glBindTexture(GL_TEXTURE_2D, texture1); // All upcoming GL_TEXTURE_2D operations now have effect on our texture object
-	// Set our texture parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// Set texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	// Load, create texture and generate mipmaps
-	int width, height;
-	unsigned char* image = SOIL_load_image("textures/front.jpg", &width, &height, 0, SOIL_LOAD_RGB);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	SOIL_free_image_data(image);
-	glBindTexture(GL_TEXTURE_2D, 0); // Unbind texture when done, so we won't accidentily mess up our texture.
-	// ===================
-	// Texture 2
-	// ===================
-	glGenTextures(1, &texture2);
-	glBindTexture(GL_TEXTURE_2D, texture2);
-	// Set our texture parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// Set texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	// Load, create texture and generate mipmaps
-	image = SOIL_load_image("textures/front.jpg", &width, &height, 0, SOIL_LOAD_RGB);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	SOIL_free_image_data(image);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//shader stuff
+
+	
+	//static unsigned int cube = 0;
+	//if (!triedWeedShader){
+	//	char* error;
+	//	if (!(weedShaderId = loadShader("weeds.vert", "iceflats.frag", error))) {
+	//		std::string s = "Can't Load weed Shader:";
+	//		s += error;
+	//		fl_alert(s.c_str());
+	//	}
+	//	triedWeedShader = true;
+	//}
 
 
-	// Bind Textures using texture units
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture1);
-	glUniform1i(glGetUniformLocation(cube, "ourTexture1"), 0);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, texture2);
-	glUniform1i(glGetUniformLocation(cube, "ourTexture2"), 1);
 
-	glUseProgram(cube);
+	//glUseProgram(weedShaderId);
 
 	// Camera/View transformation
-	glm::mat4 view;
-	view = glm::translate(view, glm::vec3(-thisTrainView->arcball.eyeX, -thisTrainView->arcball.eyeY, -thisTrainView->arcball.eyeZ));
-	// Projection 
-	glm::mat4 projection;
-	//projection = glm::perspective(arcball.fieldOfView, (GLfloat)w() / (GLfloat)h(), 0.1f, 1000.0f);
-	projection = glm::perspective(thisTrainView->arcball.fieldOfView, (GLfloat)thisTrainView->w() / (GLfloat)thisTrainView->h(), 0.1f, 2000.0f);
+	//glm::mat4 view;
+	//view = glm::translate(view, glm::vec3(-thisTrainView->arcball.eyeX, -thisTrainView->arcball.eyeY, -thisTrainView->arcball.eyeZ));
+	//// Projection 
+	//glm::mat4 projection;
+	//projection = glm::perspective(thisTrainView->arcball.fieldOfView, (GLfloat)thisTrainView->w() / (GLfloat)thisTrainView->h(), 0.1f, 3000.0f);
 
-	// Rotate
-	glm::mat4 model;
-	//model = glm::translate(model, glm::vec3(-10, 20, -20));
-	
-	for (int i = 0; i < 4; i++){
-		for (int j = 0; j < 4; j++)
-			model[i][j] = thisTrainView->arcball.rotateMatrix[i][j];
-	}
-	model = glm::scale(model, glm::vec3(10, 10, 10));
+	//// Rotate
+	//glm::mat4 model;
+
+	//for (int i = 0; i < 4; i++){
+	//	for (int j = 0; j < 4; j++)
+	//		model[i][j] = thisTrainView->arcball.rotateMatrix[i][j];
+	//}
+	//model = glm::translate(model, glm::vec3(60, 20, -130));
+	//model = glm::scale(model, glm::vec3(20, 20, 20));
+
+
 
 	// Get their uniform location
-	GLint modelLoc = glGetUniformLocation(cube, "model");
-	GLint viewLoc = glGetUniformLocation(cube, "view");
-	GLint projLoc = glGetUniformLocation(cube, "projection");
-	// Pass the matrices to the shader
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	//GLint modelLoc = glGetUniformLocation(weedShaderId, "gxl3d_ModelMatrix");
+	//GLint viewLoc = glGetUniformLocation(weedShaderId, "gxl3d_ViewMatrix");
+	//GLint projLoc = glGetUniformLocation(weedShaderId, "gxl3d_ProjectionMatrix");
+	//// Pass the matrices to the shader
+	//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
 	
-	// Draw container
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glBindVertexArray(0);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	
+	
+	//end shader stuff
+	
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	for (int weed = 0; weed < 10; weed++){
+		glPushMatrix();
+		glTranslated(weedPositions[weed][0], 0, weedPositions[weed][1]);
+		//rotate using arcball;
+		//printf("----------\n");
+		//for (int i = 0; i < 4; i++){
+		//	for (int j = 0; j < 4; j++){
+		//		printf("%f,", thisTrainView->arcball.rotateMatrix[i][j]);
+		//	}
+		//	printf("\n");
+		//}
+		//printf("%f,%f,%f\n", thisTrainView->arcball.rotateMatrix[3][0], thisTrainView->arcball.rotateMatrix[3][1], thisTrainView->arcball.rotateMatrix[3][2]);
+		//glm::vec3 persp = glm::vec3(thisTrainView->arcball.eyeX, 0, thisTrainView->arcball.eyeY);
+		//glm::vec3 ori = glm::vec3(persp.x - weedPositions[weed][0], 0, persp.z - weedPositions[weed][1]);
+		//glm::vec3 cur = glm::vec3(1, 0, 0);
+
+		//ori = glm::normalize(ori);
+		//glm::vec3 cross = (glm::cross(ori, cur));
+		//float length = glm::length(cross);
+		//double angle = glm::asin(length);
+
+		//glRotated(angle, 0,1,0);
+
+		glBegin(GL_QUADS);
+
+		glTexCoord2f(0.0, 0.0);
+		glVertex3f(-7,  0, 0);
+
+		glTexCoord2f(0.0, 1.0);
+		glVertex3f(-7, 20, 0);
+
+		glTexCoord2f(1.0, 1.0);
+		glVertex3f(8, 20, 0);
+
+		glTexCoord2f(1.0, 0.0);
+		glVertex3f(8, 0, 0);
+
+		glEnd();
+		glPopMatrix();
+	}
 	glUseProgram(0);
-	*/
+	glDisable(GL_TEXTURE_2D);
 }

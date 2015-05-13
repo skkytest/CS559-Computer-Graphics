@@ -35,7 +35,6 @@
 TrainView::TrainView(int x, int y, int w, int h, const char* l) : Fl_Gl_Window(x,y,w,h,l)
 {
 	mode( FL_RGB|FL_ALPHA|FL_DOUBLE | FL_STENCIL );
-
 	resetArcball();
 }
 
@@ -488,6 +487,7 @@ void TrainView::drawStuff(bool doingShadows)
 	//newDrawObjects.drawPlatform(this, doingShadows);
 
 	newDrawObjects.drawJet(this, doingShadows);
+	newDrawObjects.drawWeeds(this, doingShadows);
 }
 
 // this tries to see which control point is under the mouse
