@@ -76,6 +76,9 @@ public:
 	//for physics
 	Fl_Button* physics;
 
+	//for meteorites
+	Fl_Button* meteorites;
+
 	// call this method when things change
 	void damageMe();
 

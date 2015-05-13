@@ -168,6 +168,13 @@ TrainWindow::TrainWindow(const int x, const int y) : Fl_Double_Window(x,y,800,60
 		physics->selection_color((Fl_Color)3); // yellow when pressed	
 		physics->callback((Fl_Callback*)getPhysics, this);
 
+		pty += 50;
+		Fl_Button* meteorites = new Fl_Button(605, pty, 120, 20, "Meteorites!!!!");
+		meteorites->type(FL_TOGGLE_BUTTON);		// toggle
+		meteorites->value(0);		// turned off
+		meteorites->selection_color((Fl_Color)2); // yellow when pressed	
+		meteorites->callback((Fl_Callback*)getmeteorites, this);
+
 
 		// we need to make a little phantom widget to have things resize correctly
 		Fl_Box* resizebox = new Fl_Box(600,595,200,5);

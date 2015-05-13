@@ -20,4 +20,6 @@ public:
 	void drawJet(TrainView*, bool);
 	void ShaderCube(TrainView*, bool);
 	void drawWeeds(TrainView*, bool);
+	void drawrock(TrainView*, bool);
+	void drawrock1(TrainView*, bool);
 };

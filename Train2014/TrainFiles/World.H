@@ -60,6 +60,9 @@ public:		// we don't make anything private - for no good reason
 	//add physics
 	bool physics = false;
 
+	//add meteorites
+	bool meteorites = false;
+
 	//add tension
 	float tension = 0.7;
 
@@ -85,6 +88,8 @@ public:		// we don't make anything private - for no good reason
 	//for shader
 	bool cubeShader = 0;
 	bool imageShader = 0;
+	bool rock = 0;
+	bool rock1 = 0;
 
 	// read and write to files
 	void readPoints(const char* filename);
